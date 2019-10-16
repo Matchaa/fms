@@ -9,17 +9,17 @@ export default new Router({
       path: '/',
       name: 'layout',
       // redirect: { name: 'deliverGoods' },
-      component: () => import('../components/layout.vue'),
+      component: () => import('components/layout.vue'),
       children: [
         {
           path: 'delivergoods',
           name: 'deliverGoods',
-          component: () => import('../views/deliverGoods')
+          component: () => import('views/deliverGoods')
         },
         {
           path: 'statistics',
           name: 'statistics',
-          component: () => import('../views/statistics')
+          component: () => import('views/statistics')
         }
       ]
     }
