@@ -9,7 +9,7 @@ export default new Router({
       path: '/',
       name: 'layout',
       // redirect: { name: 'deliverGoods' },
-      component: () => import('components/layout.vue'),
+      component: () => import('components/layout/index.vue'),
       children: [
         {
           path: 'delivergoods',
@@ -20,6 +20,16 @@ export default new Router({
           path: 'statistics',
           name: 'statistics',
           component: () => import('views/statistics')
+        },
+        {
+          path: 'customerinfo',
+          name: 'customerInfo',
+          component: () => import('views/basicConfig/customerInfo')
+        },
+        {
+          path: 'productconfig',
+          name: 'productConfig',
+          component: () => import('views/basicConfig/productConfig')
         }
       ]
     }
