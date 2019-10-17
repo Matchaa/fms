@@ -1,5 +1,4 @@
 const path = require('path')
-
 module.exports = {
   // pages: {
   //   index: {
@@ -16,8 +15,6 @@ module.exports = {
     port: 8080
   },
   configureWebpack: {
-    // provide the app's title in webpack's name field, so that
-    // it can be accessed in index.html to inject the correct title.
     resolve: {
       alias: {
         '@': path.join(__dirname, 'src'),
@@ -25,5 +22,23 @@ module.exports = {
         views: path.join(__dirname, 'src/views')
       }
     }
+  },
+  chainWebpack(config) {
+    // set svg-sprite-loader
+    config.module
+      .rule('svg')
+      .exclude.add(path.resolve(__dirname, 'src/assets/icons'))
+      .end()
+    config.module
+      .rule('icons')
+      .test(/\.svg$/)
+      .include.add(path.resolve(__dirname, 'src/assets/icons'))
+      .end()
+      .use('svg-sprite-loader')
+      .loader('svg-sprite-loader')
+      .options({
+        symbolId: 'icon-[name]'
+      })
+      .end()
   }
 }
