@@ -40,5 +40,13 @@ module.exports = {
         symbolId: 'icon-[name]'
       })
       .end()
+  },
+  css: {
+    loaderOptions: {
+      // 给 sass-loader 传递选项
+      sass: {
+        prependData: `@import "@/styles/variables.scss";`
+      }
+    }
   }
 }

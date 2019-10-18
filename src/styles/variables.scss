@@ -1,9 +1,10 @@
+$--color-primary: #409eff;
+$--color-dark: #304156;
 // sidebar
 $menuText: #bfcbd9;
-$menuActiveText: #409eff;
-// $subMenuActiveText:#f4f4f5;
+$menuActiveText: $--color-primary;
 
-$menuBg: #304156;
+$menuBg: $--color-dark;
 $menuHover: #263445;
 
 $subMenuBg: #1f2d3d;
@@ -15,7 +16,6 @@ $sideBarWidth: 200px;
 :export {
   menuText: $menuText;
   menuActiveText: $menuActiveText;
-  // subMenuActiveText: $subMenuActiveText;
   menuBg: $menuBg;
   menuHover: $menuHover;
   subMenuBg: $subMenuBg;
