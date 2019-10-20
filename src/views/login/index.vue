@@ -1,80 +1,25 @@
 <!--登陆-->
+import { setTimeout } from 'timers';
 <template>
   <div class="login">
-    <div class="login__title">登 陆</div>
-    <el-form :model="form"
-      :rules="rules"
-      ref="ruleForm"
-      label-width="100px"
-      class="demo-ruleForm">
-      <el-form-item label="活动名称"
-        prop="name">
-        <el-input v-model="ruleForm.name"></el-input>
+    <div class="login__title">智能工厂管理系统</div>
+    <el-form class="form" :model="form" :rules="rules" ref="form">
+      <el-form-item prop="username" class="form__item">
+        <span class="svg-container">
+          <svg-icon name="user" />
+        </span>
+        <el-input ref="username" v-model="form.username" placeholder="Username" type="text" autocomplete="on" />
       </el-form-item>
-      <el-form-item label="活动区域"
-        prop="region">
-        <el-select v-model="ruleForm.region"
-          placeholder="请选择活动区域">
-          <el-option label="区域一"
-            value="shanghai"></el-option>
-          <el-option label="区域二"
-            value="beijing"></el-option>
-        </el-select>
+      <el-form-item prop="password">
+        <span class="svg-container">
+          <svg-icon name="password" />
+        </span>
+        <el-input ref="password" v-model="form.password" placeholder="Password" :type="isShowPwd?'':'password'" autocomplete="on" />
+        <span class="show-pwd" @click="isShowPwd=!isShowPwd">
+          <svg-icon :name="isShowPwd? 'eye' : 'eye-open'" />
+        </span>
       </el-form-item>
-      <el-form-item label="活动时间"
-        required>
-        <el-col :span="11">
-          <el-form-item prop="date1">
-            <el-date-picker type="date"
-              placeholder="选择日期"
-              v-model="ruleForm.date1"
-              style="width: 100%;"></el-date-picker>
-          </el-form-item>
-        </el-col>
-        <el-col class="line"
-          :span="2">-</el-col>
-        <el-col :span="11">
-          <el-form-item prop="date2">
-            <el-time-picker placeholder="选择时间"
-              v-model="ruleForm.date2"
-              style="width: 100%;"></el-time-picker>
-          </el-form-item>
-        </el-col>
-      </el-form-item>
-      <el-form-item label="即时配送"
-        prop="delivery">
-        <el-switch v-model="ruleForm.delivery"></el-switch>
-      </el-form-item>
-      <el-form-item label="活动性质"
-        prop="type">
-        <el-checkbox-group v-model="ruleForm.type">
-          <el-checkbox label="美食/餐厅线上活动"
-            name="type"></el-checkbox>
-          <el-checkbox label="地推活动"
-            name="type"></el-checkbox>
-          <el-checkbox label="线下主题活动"
-            name="type"></el-checkbox>
-          <el-checkbox label="单纯品牌曝光"
-            name="type"></el-checkbox>
-        </el-checkbox-group>
-      </el-form-item>
-      <el-form-item label="特殊资源"
-        prop="resource">
-        <el-radio-group v-model="ruleForm.resource">
-          <el-radio label="线上品牌商赞助"></el-radio>
-          <el-radio label="线下场地免费"></el-radio>
-        </el-radio-group>
-      </el-form-item>
-      <el-form-item label="活动形式"
-        prop="desc">
-        <el-input type="textarea"
-          v-model="ruleForm.desc"></el-input>
-      </el-form-item>
-      <el-form-item>
-        <el-button type="primary"
-          @click="submitForm('ruleForm')">立即创建</el-button>
-        <el-button @click="resetForm('ruleForm')">重置</el-button>
-      </el-form-item>
+      <el-button class="form__button" :loading="isLoading" type="primary" @click.native.prevent="onLogin">登 录</el-button>
     </el-form>
   </div>
 </template>
@@ -82,28 +27,23 @@
 <script>
 export default {
   data() {
-    var validatePass = (rule, value, callback) => {
-      if (value === '') {
-        callback(new Error('请输入密码'))
-      } else {
-        if (this.ruleForm.checkPass !== '') {
-          this.$refs.ruleForm.validateField('checkPass')
-        }
-        callback()
-      }
-    }
     return {
       form: {
-        name: '',
+        username: '',
         password: ''
       },
+      isShowPwd: false,
       rules: {
-        name: [
+        username: [
           { required: true, message: '请输入正确的用户名', trigger: 'blur' },
-          { min: 3, max: 5, message: '长度在 3 到 5 个字符', trigger: 'blur' }
+          { min: 3, max: 10, message: '长度在 3 到 10 个字符', trigger: 'blur' }
         ],
-        password: [{ validator: validatePass, trigger: 'blur' }]
-      }
+        password: [
+          { required: true, message: '请输入密码', trigger: 'blur' },
+          { min: 6, max: 12, message: '长度在 6 到 12个字符', trigger: 'blur' }
+        ]
+      },
+      isLoading: false
     }
   },
 
@@ -111,24 +51,102 @@ export default {
 
   mounted() {},
 
-  methods: {},
+  methods: {
+    onShowPwd() {},
+    onLogin() {
+      this.$refs.form.validate(valid => {
+        if (valid) {
+          this.loading = true
+          setTimeout(() => {
+            this.$router.push({ name: 'layout' })
+          }, 1000)
+        } else {
+          return false
+        }
+      })
+    }
+  },
 
   components: {}
 }
 </script>
 <style lang='scss' scoped>
+$--bg: #2d3a4b;
+$--dark-gray: #889aa4;
+$--light-gray: #eee;
 .login {
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
   width: 100vw;
   height: 100vh;
-  background: $--color-dark;
+  background: $menuBg;
   &__title {
     font-size: 26px;
     color: #eee;
     margin-bottom: 40px;
     font-weight: bold;
   }
+}
+.form {
+  width: 520px;
+  max-width: 100%;
+  .svg-container {
+    display: inline-block;
+    // width: 20px;
+    padding: 6px 0 6px 15px;
+    vertical-align: middle;
+    color: $--dark-gray;
+  }
+
+  &__button {
+    width: 100%;
+    // margin-bottom:30px;
+  }
+  /deep/ .el-form-item {
+    background: $menuHover;
+    border: 1px solid #3e4956;
+    border-radius: 5px;
+  }
+  /deep/ .el-input {
+    display: inline-block;
+    width: 85%;
+    // padding: 12px 0;
+    // color: $--light-gray;
+  }
+  /deep/ input {
+    padding: 12px 5px 12px 15px;
+    background-color: $menuHover !important;
+    border: none;
+    color: #fff;
+  }
+
+  /deep/ input:-webkit-autofill {
+    box-shadow: 0 0 0px 1000px $menuHover inset !important;
+    text-fill-color:#fff;
+    -webkit-text-fill-color: #fff;
+    border-radius: 0;
+  }
+  // /deep/ .el-input__inner {
+  //   padding: 12px 5px 12px 15px;
+  //   background-color: $menuHover !important;
+  //   border: none;
+  //   color: #fff;
+  // }
+  /deep/ .el-form-item.is-error .el-input__inner,
+  .el-form-item.is-error .el-input__inner:focus {
+    border: none;
+  }
+  // &__item--active {
+  //   border: 1px solid $--color-primary ;
+  // }
+}
+.show-pwd {
+  vertical-align: middle;
+  padding-left: 15px;
+  font-size: 16px;
+  color: $--dark-gray;
+  cursor: pointer;
 }
 </style>

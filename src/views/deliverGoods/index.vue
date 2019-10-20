@@ -72,7 +72,9 @@
       layout="total, sizes, prev, pager, next, jumper"
       :total="total">
     </el-pagination>
+     <add-dialog ref="addDialog"></add-dialog>
   </div>
+ 
 </template>
 
 <script>
@@ -105,12 +107,13 @@ export default {
         },
         {
           title: "联系电话",
-          name: "phone"
+          name: "phone",
+          width: 100
         },
         {
           title: "送货时间",
           name: "date",
-          width: 150
+          width: 100
         }
       ],
       tableData: [
@@ -120,7 +123,7 @@ export default {
           name: "舜禹集团",
           address: "浙江省余姚市",
           phone: 1585883882,
-          date: "2019-09-28 12:00:00",
+          date: "2019-09-28",
           detail: [
             {
               num: 12345,
@@ -223,7 +226,9 @@ export default {
   mounted() {},
 
   methods: {
-    onAddClick() {},
+    onAddClick() {
+      this.$refs.addDialog.show=true
+    },
     // 打印
     onPrintClick() {},
     // 打印预览
@@ -234,15 +239,23 @@ export default {
     onCurrentChange() {}
   },
 
-  components: {}
+  components: {
+    addDialog:()=>import('./components/addDialog')
+  }
 };
 </script>
 <style lang='scss' scoped>
 .table {
   width: 100%;
 }
-.expand-table {
-  width: 800px;
+// .expand-table {
+//   width: 800px;
+// }
+/deep/ .el-table__expanded-cell{
+  // padding: 20px 170px 20px 50px;
+  .el-table{
+    width:calc(100vw - 420px);
+  }
 }
 .page {
   margin-top: 20px;
