@@ -72,9 +72,9 @@
       layout="total, sizes, prev, pager, next, jumper"
       :total="total">
     </el-pagination>
-     <add-dialog ref="addDialog"></add-dialog>
+    <add-dialog ref="addDialog"></add-dialog>
   </div>
- 
+
 </template>
 
 <script>
@@ -82,53 +82,53 @@ export default {
   data() {
     return {
       form: {
-        num: "",
-        name: "",
-        date: ""
+        num: '',
+        name: '',
+        date: ''
       },
 
       tableHeader: [
         {
-          title: "状态",
-          name: "state"
+          title: '状态',
+          name: 'state'
         },
         {
-          title: "送货单号",
-          name: "num"
+          title: '送货单号',
+          name: 'num'
         },
         {
-          title: "客户名称",
-          name: "name"
+          title: '客户名称',
+          name: 'name'
         },
         {
-          title: "客户地址",
-          name: "address",
+          title: '客户地址',
+          name: 'address',
           width: 200
         },
         {
-          title: "联系电话",
-          name: "phone",
+          title: '联系电话',
+          name: 'phone',
           width: 100
         },
         {
-          title: "送货时间",
-          name: "date",
+          title: '送货时间',
+          name: 'date',
           width: 100
         }
       ],
       tableData: [
         {
-          state: "已发货",
+          state: '已发货',
           num: 123,
-          name: "舜禹集团",
-          address: "浙江省余姚市",
+          name: '舜禹集团',
+          address: '浙江省余姚市',
           phone: 1585883882,
-          date: "2019-09-28",
+          date: '2019-09-28',
           detail: [
             {
               num: 12345,
-              generalStandards: "200*200*100",
-              additionalStandards: "10*10*20",
+              generalStandards: '200*200*100',
+              additionalStandards: '10*10*20',
               amount: 124,
               weight: 123,
               unitPrice: 11122,
@@ -138,12 +138,12 @@ export default {
               gasCut: 111,
               saw: 222,
               totalPrice: 123,
-              remake: "备注"
+              remake: '备注'
             },
             {
               num: 12345,
-              generalStandards: "200*200*100",
-              additionalStandards: "10*10*20",
+              generalStandards: '200*200*100',
+              additionalStandards: '10*10*20',
               amount: 124,
               weight: 123,
               unitPrice: 11122,
@@ -153,7 +153,7 @@ export default {
               gasCut: 111,
               saw: 222,
               totalPrice: 123,
-              remake: "备注"
+              remake: '备注'
             }
           ]
         }
@@ -161,64 +161,64 @@ export default {
       // （送货单）钢号、规格（净尺寸规格/毛尺寸规格）、件数、重量、单价、材料费、加工费（方：精加工、飞边、气割费，圆：锯费）、总金额、备注
       expandTableHeader: [
         {
-          title: "钢号",
-          name: "num"
+          title: '钢号',
+          name: 'num'
         },
         {
-          title: "净尺寸规格",
-          name: "generalStandards",
+          title: '净尺寸规格',
+          name: 'generalStandards',
           width: 150
         },
         {
-          title: "毛尺寸规格",
-          name: "additionalStandards",
+          title: '毛尺寸规格',
+          name: 'additionalStandards',
           width: 150
         },
         {
-          title: "件数",
-          name: "amount"
+          title: '件数',
+          name: 'amount'
         },
         {
-          title: "重量",
-          name: "weight"
+          title: '重量',
+          name: 'weight'
         },
         {
-          title: "单价",
-          name: "unitPrice"
+          title: '单价',
+          name: 'unitPrice'
         },
         {
-          title: "材料费",
-          name: "material"
+          title: '材料费',
+          name: 'material'
         },
         {
-          title: "精加工",
-          name: "machining"
+          title: '精加工',
+          name: 'machining'
         },
         {
-          title: "飞边",
-          name: "flashSide"
+          title: '飞边',
+          name: 'flashSide'
         },
         {
-          title: "气割费",
-          name: "gasCut"
+          title: '气割费',
+          name: 'gasCut'
         },
         {
-          title: "锯费",
-          name: "saw"
+          title: '锯费',
+          name: 'saw'
         },
         {
-          title: "总金额",
-          name: "totalPrice"
+          title: '总金额',
+          name: 'totalPrice'
         },
         {
-          title: "备注",
-          name: "remarks"
+          title: '备注',
+          name: 'remarks'
         }
       ],
       currentPage: 1,
       pageSize: 50,
       total: 0
-    };
+    }
   },
 
   computed: {},
@@ -227,22 +227,28 @@ export default {
 
   methods: {
     onAddClick() {
-      this.$refs.addDialog.show=true
+      this.$refs.addDialog.show = true
     },
     // 打印
     onPrintClick() {},
     // 打印预览
     onPrintPreviewClick() {},
-    onEditClick(index, row) {},
-    onDeleteClick(index, row) {},
+    onEditClick(index, row) {
+      console.log(index, row)
+    },
+    onDeleteClick(index, row) {
+      console.log(index, row)
+    },
     onSizeChange() {},
-    onCurrentChange() {}
+    onCurrentChange(value) {
+      this.currentPage = value
+    }
   },
 
   components: {
-    addDialog:()=>import('./components/addDialog')
+    addDialog: () => import('./components/addDialog')
   }
-};
+}
 </script>
 <style lang='scss' scoped>
 .table {
@@ -251,10 +257,10 @@ export default {
 // .expand-table {
 //   width: 800px;
 // }
-/deep/ .el-table__expanded-cell{
+/deep/ .el-table__expanded-cell {
   // padding: 20px 170px 20px 50px;
-  .el-table{
-    width:calc(100vw - 420px);
+  .el-table {
+    width: calc(100vw - 420px);
   }
 }
 .page {

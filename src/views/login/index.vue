@@ -1,25 +1,40 @@
 <!--登陆-->
-import { setTimeout } from 'timers';
 <template>
   <div class="login">
     <div class="login__title">智能工厂管理系统</div>
-    <el-form class="form" :model="form" :rules="rules" ref="form">
-      <el-form-item prop="username" class="form__item">
+    <el-form class="form"
+      :model="form"
+      :rules="rules"
+      ref="form">
+      <el-form-item prop="username"
+        class="form__item">
         <span class="svg-container">
           <svg-icon name="user" />
         </span>
-        <el-input ref="username" v-model="form.username" placeholder="Username" type="text" autocomplete="on" />
+        <el-input ref="username"
+          v-model="form.username"
+          placeholder="Username"
+          type="text"
+          autocomplete="on" />
       </el-form-item>
       <el-form-item prop="password">
         <span class="svg-container">
           <svg-icon name="password" />
         </span>
-        <el-input ref="password" v-model="form.password" placeholder="Password" :type="isShowPwd?'':'password'" autocomplete="on" />
-        <span class="show-pwd" @click="isShowPwd=!isShowPwd">
+        <el-input ref="password"
+          v-model="form.password"
+          placeholder="Password"
+          :type="isShowPwd?'':'password'"
+          autocomplete="on" />
+        <span class="show-pwd"
+          @click="isShowPwd=!isShowPwd">
           <svg-icon :name="isShowPwd? 'eye' : 'eye-open'" />
         </span>
       </el-form-item>
-      <el-button class="form__button" :loading="isLoading" type="primary" @click.native.prevent="onLogin">登 录</el-button>
+      <el-button class="form__button"
+        :loading="isLoading"
+        type="primary"
+        @click.native.prevent="onLogin">登 录</el-button>
     </el-form>
   </div>
 </template>
@@ -124,7 +139,7 @@ $--light-gray: #eee;
 
   /deep/ input:-webkit-autofill {
     box-shadow: 0 0 0px 1000px $menuHover inset !important;
-    text-fill-color:#fff;
+    text-fill-color: #fff;
     -webkit-text-fill-color: #fff;
     border-radius: 0;
   }

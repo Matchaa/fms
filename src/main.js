@@ -4,10 +4,11 @@ import router from './router'
 import store from './store'
 import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
+import Vlf from 'vlf'
 
-// import './styles/variables.scss'
 import './assets/icons' // icon
 Vue.config.productionTip = false
+Vue.use(Vlf)
 Vue.use(ElementUI)
 new Vue({
   router,
