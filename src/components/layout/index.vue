@@ -3,6 +3,8 @@
   <el-container>
     <el-aside class="aside"
       :class="{'aside--collapse':isCollapse}">
+      <button @click="find">find</button>
+      <button @click="add">11111</button>
       <side-bar ref="sideBar"
         v-model="tabActive"
         :isCollapse="isCollapse"
@@ -55,6 +57,21 @@ export default {
   watch: {},
   mounted() {},
   methods: {
+    find() {
+      // let vshopDB = null
+      this.$db.getData({ name: 'CUSTOMER_DATA', key: 'id' }, 1005).then(res => {
+        console.log(res)
+      })
+
+      // this.$db
+      //   .setItem('CUSTOMER_DATA', { id: 1004, name: 'Casper', age: 26 }, 'id')
+      //   .then(res => {
+      //     console.log(111)
+      //   })
+    },
+    add() {
+      this.$db.addData('CUSTOMER_DATA', { id: 1005, name: 'Casper', age: 26 })
+    },
     onTabRemove(name) {
       this.tabListMap.delete(name)
       this.tabListMap = this.tabListMap
