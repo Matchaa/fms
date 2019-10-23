@@ -1,7 +1,8 @@
 <!--客户信息-->
 <template>
   <div>
-    <el-form :inline="true">
+    <el-form class="form"
+      :inline="true">
       <el-form-item label="客户名称">
         <el-input v-model="form.name"
           placeholder="请输入客户名称"
@@ -33,10 +34,10 @@
         fixed="right">
         <template slot-scope="scope">
           <el-button size="mini"
-            @click="onEditClick(scope.$index, scope.row)">编辑</el-button>
+            @click="onEditClick(scope.row)">编辑</el-button>
           <el-button size="mini"
             type="danger"
-            @click="onDeleteClick(scope.$index, scope.row)">删除</el-button>
+            @click="onDeleteClick(scope.row)">删除</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -113,33 +114,53 @@ export default {
       this.reFindTableData()
     },
     reFindTableData() {
-      const { pageSize, currentPage } = this
-      const { name, phone } = this.form
-      this.$vlf.getItem('CUSTOMER_DATA').then(res => {
-        if (!res) this.tableData = []
-        this.tableData = res
-          .map((item, index) => {
+      const {
+        pageSize,
+        currentPage,
+        form: { name, phone }
+      } = this
+      this.$db
+        .getData(
+          {
+            name: 'CUSTOMER_DATA',
+            key: 'id'
+          },
+          {
+            pageSize: pageSize,
+            pageIndex: currentPage,
+            search: [
+              { name: 'name', value: name },
+              { name: 'phone', value: phone }
+            ]
+          }
+        )
+        .then(res => {
+          this.tableData = res.map((item, index) => {
             item.num = pageSize * (currentPage - 1) + index + 1
             return item
           })
-          .filter(
-            (item, index) =>
-              index >= pageSize * (currentPage - 1) &&
-              index < pageSize * currentPage &&
-              (name === '' || name === item.name) &&
-              (phone === '' || phone === item.phone)
-          )
-        this.total = this.tableData.length
-      })
+          // .filter(
+          //   (item, index) =>
+          //     index >= pageSize * (currentPage - 1) &&
+          //     index < pageSize * currentPage &&
+          //     (name === '' || name === item.name) &&
+          //     (phone === '' || phone === item.phone)
+          // )
+          this.total = this.tableData.length
+        })
     },
     onAddClick() {
       this.$refs.addDialog.show = true
+      this.$refs.addDialog.detail = {}
     },
-    onEditClick(index, row) {
-      console.log(index, row)
+    onEditClick(row) {
+      this.$refs.addDialog.show = true
+      this.$refs.addDialog.detail = row
     },
-    onDeleteClick(index, row) {
-      console.log(index, row)
+    onDeleteClick(row) {
+      this.$db.deleteData('CUSTOMER_DATA', row.id).then(() => {
+        this.reFindTableData()
+      })
     },
     onSizeChange() {
       this.reFindTableData()
@@ -156,6 +177,11 @@ export default {
 }
 </script>
 <style lang='scss' scoped>
+.form {
+  * {
+    margin-bottom: 22px;
+  }
+}
 .page {
   margin-top: 20px;
   float: right;

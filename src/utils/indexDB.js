@@ -36,11 +36,51 @@ const openDB = function(newStore) {
     }
   })
 }
+// 获取全部数据
+const getData = function(storeObj, { pageSize, pageIndex, search }) {
+  const { name } = storeObj
+  return openDB(storeObj).then(db => {
+    var store = db.transaction(name, 'readonly').objectStore(name)
+    var range = IDBKeyRange.lowerBound(0)
+
+    const request = store.openCursor(range, 'prev')
+    let data = []
+    return new Promise((resolve, reject) => {
+      request.onerror = () => {
+        console.log('获取数据报错')
+        reject()
+      }
+      request.addEventListener('success', e => {
+        const cursor = e.target.result
+        if (cursor) {
+          data.push(cursor.value)
+          // console.log(cursor.value, data)
+          cursor.continue()
+        } else {
+          const func = data => {
+            return search.reduce(
+              (accumulator, currentValue) =>
+                accumulator &&
+                (currentValue.value === '' ||
+                  data[currentValue.name] === currentValue.value),
+              true
+            )
+          }
+          data = data.filter(
+            (item, index) =>
+              index >= pageSize * (pageIndex - 1) &&
+              index < pageSize * pageIndex &&
+              func(item)
+          )
+          resolve(data)
+        }
+      })
+    })
+  })
+}
 // 添加数据，add添加新值
 const addData = function(storename, data) {
-  openDB().then(db => {
-    console.log(db, 'add')
-
+  return openDB().then(db => {
     var store = db.transaction(storename, 'readwrite').objectStore(storename)
     var request = store.add(data)
     return new Promise((resolve, reject) => {
@@ -57,71 +97,65 @@ const addData = function(storename, data) {
     })
   })
 }
-// 获取全部数据
-const getData = function(store) {
-  const { name, key } = store
-  return openDB({ name: name, key: key }).then(db => {
-    var store = db.transaction(name, 'readonly').objectStore(name)
-    // var range = IDBKeyRange.lowerBound(0, true)
-    const request = store.openCursor()
-    let data = []
+// 更新旧值
+const putData = function(storename, data) {
+  return openDB().then(db => {
+    var store = db.transaction(storename, 'readwrite').objectStore(storename)
+    var request = store.put(data)
     return new Promise((resolve, reject) => {
       request.onerror = () => {
-        console.log('通过KEY获取数据报错')
+        console.error('PUT添加数据报错')
         reject()
       }
-      request.addEventListener('success', e => {
-        const cursor = e.target.result
-        if (cursor) {
-          data.push(cursor.value)
-          // console.log(cursor.value, data)
-          cursor.continue()
-        } else {
-          resolve(data)
-        }
-      })
+      request.onsuccess = () => {
+        resolve()
+      }
     })
-
-    //   return new Promise((resolve, reject) => {
-    //     request.onerror = () => {
-    //       console.log('通过KEY获取数据报错')
-    //       reject()
-    //     }
-    //     request.onsuccess = event => {
-    //       console.log(event)
-    //       const cursor = event.target.result
-    //       if (cursor) {
-    //         console.log(cursor.value)
-    //         cursor.continue()
-    //       }
-    //       var result = event.target.result
-    //       resolve(result)
-    //     }
-    //   })
   })
 }
-// 更新旧值
-const putData = function(db, storename, dataArr, callback) {
-  var store = db.transaction(storename, 'readwrite').objectStore(storename)
-  for (var i = 0, len = dataArr.length; i < len; i++) {
-    var request = store.put(dataArr[i])
-    request.onerror = function() {
-      console.error('PUT添加数据报错')
-    }
-    request.onsuccess = function() {
-      if (callback && typeof callback === 'function') {
-        callback()
+// 删除数据
+const deleteData = function(storename, key) {
+  return openDB().then(db => {
+    var store = db.transaction(storename, 'readwrite').objectStore(storename)
+    var request = store.delete(key)
+    return new Promise((resolve, reject) => {
+      request.onerror = () => {
+        console.error('删除数据错误')
+        reject()
       }
-    }
-  }
-}
+      request.onsuccess = () => {
+        console.log(111)
 
+        resolve()
+      }
+    })
+  })
+}
+// 清空数据
+const clearData = function(storename) {
+  return openDB().then(db => {
+    var store = db.transaction(storename, 'readwrite').objectStore(storename)
+    var request = store.clear()
+    return new Promise((resolve, reject) => {
+      request.onerror = () => {
+        console.error('清空数据错误')
+        reject()
+      }
+      request.onsuccess = () => {
+        resolve()
+      }
+    })
+  })
+}
 export default {
   install: function(Vue) {
     Vue.prototype.$db = {
       openDB,
+      getData,
       addData,
-      getData
+      putData,
+      deleteData,
+      clearData
     }
   }
 }

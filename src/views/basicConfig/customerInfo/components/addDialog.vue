@@ -2,7 +2,8 @@
 <template>
   <el-dialog title="新增客户"
     :visible.sync="show"
-    width="600px">
+    width="600px"
+    @open="openDialog">
     <el-form label-width="100px"
       :model="form"
       :rules="rules"
@@ -43,6 +44,9 @@ import { isPhone } from '@/utils/validate.js'
 export default {
   data() {
     var validatePhone = (rule, value, callback) => {
+      if (!value) {
+        callback(new Error('请输入电话号码'))
+      }
       if (!isPhone(value)) {
         callback(new Error('请输入正确格式的电话号码'))
       } else {
@@ -51,6 +55,7 @@ export default {
     }
     return {
       show: false,
+      detail: {},
       form: {
         name: '',
         address: '',
@@ -62,38 +67,30 @@ export default {
         address: [
           { required: true, message: '请输入客户地址', trigger: 'blur' }
         ],
-        phone: [
-          { required: true, message: '请输入联系电话', trigger: 'blur' },
-          { validator: validatePhone, trigger: 'blur' }
-        ]
+        phone: [{ validator: validatePhone, trigger: 'blur' }]
       }
     }
   },
 
   computed: {},
-
   mounted() {},
 
   methods: {
-    getCustomerData() {
-      return new Promise(resolve => {
-        this.$vlf.getItem('CUSTOMER_DATA').then(res => {
-          resolve(res || [])
-        })
-      })
+    openDialog() {
+      for (let key in this.form) {
+        this.form[key] = this.detail[key] || ''
+      }
     },
     onCertain() {
       this.$refs.form.validate(async valid => {
         if (valid) {
-          let tableData = await this.getCustomerData()
-          const param = {}
+          const param = { id: this.detail.id || new Date().getTime() }
           for (let key in this.form) {
             param[key] = this.form[key]
           }
-          tableData.unshift(param)
-          this.$vlf.setItem('CUSTOMER_DATA', tableData).then(() => {
-            this.show = false
+          this.$db.putData('CUSTOMER_DATA', param).then(() => {
             this.$emit('success')
+            this.show = false
           })
         }
       })
