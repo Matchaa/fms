@@ -120,20 +120,14 @@ export default {
         form: { name, phone }
       } = this
       this.$db
-        .getData(
-          {
-            name: 'CUSTOMER_DATA',
-            key: 'id'
-          },
-          {
-            pageSize: pageSize,
-            pageIndex: currentPage,
-            search: [
-              { name: 'name', value: name },
-              { name: 'phone', value: phone }
-            ]
-          }
-        )
+        .getData('CUSTOMER_DATA', {
+          pageSize: pageSize,
+          pageIndex: currentPage,
+          search: [
+            { name: 'name', value: name },
+            { name: 'phone', value: phone }
+          ]
+        })
         .then(res => {
           this.tableData = res.map((item, index) => {
             item.num = pageSize * (currentPage - 1) + index + 1

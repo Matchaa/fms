@@ -1,21 +1,25 @@
-import { Promise } from 'q'
-
+import store from '../store'
 // 创建一个数据库
 // 新对象储存空间newStore参数：newStore.name、newStore.key、newStore.index
 // newStore.index:[{name,key,unique}]
-const openDB = function(newStore) {
-  var request = window.indexedDB.open('fms')
+const openDB = function(storeName, storeKey, storeIndex) {
+  console.log(storeName)
+
+  if (storeName) {
+    store.commit('changeIndexDBVersion')
+  }
+  var request = window.indexedDB.open('fms', store.state.indexDBVersion)
 
   // 创建一个对象仓库
   request.onupgradeneeded = function(event) {
     var db = event.target.result
-    if (newStore) {
-      if (!db.objectStoreNames.contains(newStore.name)) {
-        var store = db.createObjectStore(newStore.name, {
-          keyPath: newStore.key
+    if (storeName) {
+      if (!db.objectStoreNames.contains(storeName)) {
+        var store = db.createObjectStore(storeName, {
+          keyPath: storeKey || 'id'
         })
-        if (newStore.index) {
-          for (let index of newStore.index) {
+        if (storeIndex) {
+          for (let index of storeIndex) {
             store.createIndex(index.name, index.key, { unique: index.unique })
           }
         }
@@ -24,10 +28,6 @@ const openDB = function(newStore) {
   }
   return new Promise((resolve, reject) => {
     request.onsuccess = function(event) {
-      // db = event.target.result
-      // if (callback && typeof callback === 'function') {
-      //   callback(db||event.target.result)
-      // }
       resolve(event.target.result)
     }
     request.onerror = function(e) {
@@ -37,10 +37,9 @@ const openDB = function(newStore) {
   })
 }
 // 获取全部数据
-const getData = function(storeObj, { pageSize, pageIndex, search }) {
-  const { name } = storeObj
-  return openDB(storeObj).then(db => {
-    var store = db.transaction(name, 'readonly').objectStore(name)
+const getData = function(storeName, { pageSize, pageIndex, search }) {
+  return openDB(storeName).then(db => {
+    var store = db.transaction(storeName, 'readonly').objectStore(storeName)
     var range = IDBKeyRange.lowerBound(0)
 
     const request = store.openCursor(range, 'prev')
@@ -100,6 +99,8 @@ const addData = function(storename, data) {
 // 更新旧值
 const putData = function(storename, data) {
   return openDB().then(db => {
+    console.log(db)
+
     var store = db.transaction(storename, 'readwrite').objectStore(storename)
     var request = store.put(data)
     return new Promise((resolve, reject) => {
@@ -108,6 +109,7 @@ const putData = function(storename, data) {
         reject()
       }
       request.onsuccess = () => {
+        console.log('putsuccess')
         resolve()
       }
     })
@@ -124,8 +126,6 @@ const deleteData = function(storename, key) {
         reject()
       }
       request.onsuccess = () => {
-        console.log(111)
-
         resolve()
       }
     })
