@@ -43,8 +43,8 @@ export default new Vuex.Store({
             unique: true
           },
           {
-            name: 'name',
-            key: 'customerName',
+            name: 'name', // 客户名称
+            key: 'name',
             unique: false
           },
           {

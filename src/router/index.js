@@ -8,19 +8,19 @@ export default new Router({
     {
       path: '/login',
       name: 'login',
-      // redirect: { name: 'deliverGoods' },
+      // redirect: { name: 'deliverNote' },
       component: () => import('views/login/index.vue')
     },
     {
       path: '/',
       name: 'layout',
-      // redirect: { name: 'deliverGoods' },
+      // redirect: { name: 'deliverNote' },
       component: () => import('components/layout/index.vue'),
       children: [
         {
-          path: 'delivergoods',
-          name: 'deliverGoods',
-          component: () => import('views/deliverGoods')
+          path: 'delivernote',
+          name: 'deliverNote',
+          component: () => import('views/deliverNote')
         },
         {
           path: 'statistics',

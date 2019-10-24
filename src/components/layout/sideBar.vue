@@ -56,7 +56,7 @@ export default {
         {
           title: '导航一',
           index: '1',
-          name: 'deliverGoods'
+          name: 'deliverNote'
         },
         {
           title: '导航二',

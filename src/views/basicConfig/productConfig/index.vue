@@ -69,6 +69,10 @@ export default {
           name: 'name'
         },
         {
+          title: '产品种类',
+          name: 'type'
+        },
+        {
           title: '单位',
           name: 'unit'
         }

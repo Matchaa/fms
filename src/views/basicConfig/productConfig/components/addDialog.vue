@@ -13,6 +13,18 @@
         <el-input v-model="form.name"
           placeholder="请输入产品名称"></el-input>
       </el-form-item>
+      <el-form-item label="产品种类"
+        prop="unit">
+        <el-select v-model="form.typeId"
+          placeholder="请选择">
+          <el-option label="方钢"
+            value="rect">
+          </el-option>
+          <el-option label="圆钢"
+            value="round">
+          </el-option>
+        </el-select>
+      </el-form-item>
       <el-form-item label="单位"
         prop="unit">
         <el-select v-model="form.unit"
@@ -24,6 +36,7 @@
           </el-option>
         </el-select>
       </el-form-item>
+
     </el-form>
     <span slot="footer"
       class="dialog-footer">
@@ -42,6 +55,7 @@ export default {
       detail: {},
       form: {
         name: '',
+        typeId: 'rect',
         unit: 'Kg'
       },
       unitList: [
@@ -70,13 +84,20 @@ export default {
           this.form[key] = this.detail[key] || 'Kg'
           return
         }
+        if (key === 'typeId') {
+          this.form[key] = this.detail[key] || 'rect'
+          return
+        }
         this.form[key] = this.detail[key] || ''
       }
     },
     onCertain() {
       this.$refs.form.validate(async valid => {
         if (valid) {
-          const param = { id: this.detail.id || new Date().getTime() }
+          const param = {
+            id: this.detail.id || new Date().getTime(),
+            type: this.form.typeId === 'rect' ? '方钢' : '圆钢'
+          }
           for (let key in this.form) {
             param[key] = this.form[key]
           }

@@ -44,9 +44,6 @@ import { isPhone } from '@/utils/validate.js'
 export default {
   data() {
     var validatePhone = (rule, value, callback) => {
-      if (!value) {
-        callback(new Error('请输入电话号码'))
-      }
       if (!isPhone(value)) {
         callback(new Error('请输入正确格式的电话号码'))
       } else {
@@ -67,7 +64,10 @@ export default {
         address: [
           { required: true, message: '请输入客户地址', trigger: 'blur' }
         ],
-        phone: [{ validator: validatePhone, trigger: 'blur' }]
+        phone: [
+          { required: true, message: '请输入电话号码', trigger: 'blur' },
+          { validator: validatePhone, trigger: 'blur' }
+        ]
       }
     }
   },

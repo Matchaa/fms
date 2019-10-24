@@ -32,7 +32,7 @@ const openDB = function() {
   })
 }
 // 获取全部数据
-const getData = function(storeName, { pageSize, pageIndex, search }) {
+const getData = function(storeName, param = {}) {
   return openDB(storeName).then(db => {
     var store = db.transaction(storeName, 'readonly').objectStore(storeName)
     var range = IDBKeyRange.lowerBound(0)
@@ -48,24 +48,28 @@ const getData = function(storeName, { pageSize, pageIndex, search }) {
         const cursor = e.target.result
         if (cursor) {
           data.push(cursor.value)
-          // console.log(cursor.value, data)
           cursor.continue()
         } else {
-          const func = data => {
-            return search.reduce(
-              (accumulator, currentValue) =>
-                accumulator &&
-                (currentValue.value === '' ||
-                  data[currentValue.name] === currentValue.value),
-              true
+          const { pageSize, pageIndex, search } = param
+          // const func = data => {}
+          if (pageSize && pageIndex) {
+            data = data.filter(
+              (item, index) =>
+                index >= pageSize * (pageIndex - 1) &&
+                index < pageSize * pageIndex
             )
           }
-          data = data.filter(
-            (item, index) =>
-              index >= pageSize * (pageIndex - 1) &&
-              index < pageSize * pageIndex &&
-              func(item)
-          )
+          if (search) {
+            data = data.filter(item =>
+              search.reduce(
+                (accumulator, currentValue) =>
+                  accumulator &&
+                  (currentValue.value === '' ||
+                    item[currentValue.name] === currentValue.value),
+                true
+              )
+            )
+          }
           resolve(data)
         }
       })
