@@ -2,30 +2,25 @@ import store from '../store'
 // 创建一个数据库
 // 新对象储存空间newStore参数：newStore.name、newStore.key、newStore.index
 // newStore.index:[{name,key,unique}]
-const openDB = function(storeName, storeKey, storeIndex) {
-  console.log(storeName)
-
-  if (storeName) {
-    store.commit('changeIndexDBVersion')
-  }
+const openDB = function() {
   var request = window.indexedDB.open('fms', store.state.indexDBVersion)
 
   // 创建一个对象仓库
-  request.onupgradeneeded = function(event) {
-    var db = event.target.result
-    if (storeName) {
-      if (!db.objectStoreNames.contains(storeName)) {
-        var store = db.createObjectStore(storeName, {
-          keyPath: storeKey || 'id'
-        })
-        if (storeIndex) {
-          for (let index of storeIndex) {
-            store.createIndex(index.name, index.key, { unique: index.unique })
-          }
-        }
-      }
-    }
-  }
+  // request.onupgradeneeded = function(event) {
+  //   var db = event.target.result
+  //   if (storeName) {
+  //     if (!db.objectStoreNames.contains(storeName)) {
+  //       var store = db.createObjectStore(storeName, {
+  //         keyPath: storeKey || 'id'
+  //       })
+  //       if (storeIndex) {
+  //         for (let index of storeIndex) {
+  //           store.createIndex(index.name, index.key, { unique: index.unique })
+  //         }
+  //       }
+  //     }
+  //   }
+  // }
   return new Promise((resolve, reject) => {
     request.onsuccess = function(event) {
       resolve(event.target.result)

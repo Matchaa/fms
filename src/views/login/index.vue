@@ -71,10 +71,33 @@ export default {
     onLogin() {
       this.$refs.form.validate(valid => {
         if (valid) {
-          this.loading = true
-          setTimeout(() => {
+          this.isLoading = true
+          const {
+            state: { storeTable },
+            getters: { indexDBVersion }
+          } = this.$store
+          var request = window.indexedDB.open('fms', indexDBVersion)
+          request.onupgradeneeded = event => {
+            var db = event.target.result
+            storeTable.forEach(item => {
+              const { name, key, indexes } = item
+              if (!db.objectStoreNames.contains(name)) {
+                const store = db.createObjectStore(name, {
+                  keyPath: key || 'id'
+                })
+                if (indexes) {
+                  for (let index of indexes) {
+                    store.createIndex(index.name, index.key, {
+                      unique: index.unique
+                    })
+                  }
+                }
+              }
+            })
+          }
+          request.onsuccess = () => {
             this.$router.push({ name: 'layout' })
-          }, 1000)
+          }
         } else {
           return false
         }
