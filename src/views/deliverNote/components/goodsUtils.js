@@ -38,10 +38,13 @@ function standardsChange(self, scope, param) {
       return Number(item) + Number(other[index])
     })
     .reduce((accumulator, currentValue) => accumulator * currentValue)
-
-  const weight = (sum * 7.85 * 0.000001 * row.amount).toFixed(2)
-  // self.$set(self.tableData, index, row)
+  const size = (sum * 7.85 * 0.000001).toFixed(2)
+  const weight = size * row.amount
+  const price = weight * row.unitPrice
+  setValue(self, scope, 'size', size)
   setValue(self, scope, 'weight', weight)
+  setValue(self, scope, 'price', price)
+  setValue(self, scope, 'totalPrice', price)
 }
 const tableHeader = {
   productName: {
@@ -73,13 +76,22 @@ const tableHeader = {
   amount: {
     title: '件数',
     type: 'inputNumber',
-    precision: 0
+    precision: 0,
+    change: (self, scope) => {
+      const { row } = scope
+      if (row.size === '') return
+      setValue(self, scope, 'weight', row.size * row.amount)
+    }
   },
   weight: {
     title: '重量',
     name: 'weight',
     type: 'input',
-    disabled: true
+    disabled: true,
+    change: (self, scope) => {
+      const { row } = scope
+      setValue(self, scope, 'price', row.unitPrice * row.weight.toFixed(2))
+    }
   },
   unitPrice: {
     title: '单价',
@@ -88,7 +100,7 @@ const tableHeader = {
     type: 'inputNumber',
     change: (self, scope) => {
       const { row } = scope
-      setValue(self, scope, 'price', row.unitPrice * row.weight)
+      setValue(self, scope, 'price', row.unitPrice * row.weight.toFixed(2))
     }
   },
   price: {

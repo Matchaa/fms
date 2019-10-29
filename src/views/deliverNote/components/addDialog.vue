@@ -191,6 +191,7 @@ export default {
         productType: '',
         generalStandards: '',
         additionalStandards: '',
+        size: '',
         amount: 1,
         weight: 0,
         unitPrice: 1,
