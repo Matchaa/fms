@@ -156,5 +156,11 @@ export default {
       deleteData,
       clearData
     }
-  }
+  },
+  openDB,
+  getData,
+  addData,
+  putData,
+  deleteData,
+  clearData
 }
