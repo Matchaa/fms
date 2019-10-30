@@ -59,7 +59,7 @@
             @click="onEditClick(scope.$index, scope.row)">编辑</el-button>
           <el-button size="mini"
             type="danger"
-            @click="onDeleteClick(scope.$index, scope.row)">删除</el-button>
+            @click="onDeleteClick(scope.$index)">删除</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -162,7 +162,7 @@ export default {
       expandTableHeader: [
         {
           title: '钢号',
-          name: 'num'
+          name: 'productName'
         },
         {
           title: '净尺寸规格',
@@ -185,6 +185,10 @@ export default {
         {
           title: '单价',
           name: 'unitPrice'
+        },
+        {
+          title: '金额',
+          name: 'price'
         },
         {
           title: '材料费',
@@ -227,6 +231,7 @@ export default {
 
   methods: {
     onAddClick() {
+      this.$refs.addDialog.detail = {}
       this.$refs.addDialog.show = true
     },
     // 打印
@@ -234,10 +239,21 @@ export default {
     // 打印预览
     onPrintPreviewClick() {},
     onEditClick(index, row) {
-      console.log(index, row)
+      this.$refs.addDialog.detail = row
+      this.$refs.addDialog.show = true
     },
-    onDeleteClick(index, row) {
-      console.log(index, row)
+    onDeleteClick(index) {
+      this.$confirm('此操作将永久删除该数据, 是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        this.tableData.splice(index, 1)
+        this.$message({
+          type: 'success',
+          message: '删除成功!'
+        })
+      })
     },
     onSizeChange() {},
     onCurrentChange(value) {

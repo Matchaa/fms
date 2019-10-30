@@ -5,8 +5,12 @@
     width="1000px"
     @open="dialogOpen">
     <el-form class="form"
+      :model="form"
+      :rules="rules"
+      ref="form"
       :inline="true">
-      <el-form-item label="状态">
+      <el-form-item label="状态"
+        prop="state">
         <el-select v-model="form.state"
           placeholder="请选择状态">
           <el-option label="未打印"
@@ -17,7 +21,8 @@
             :value="2"></el-option>
         </el-select>
       </el-form-item>
-      <el-form-item label="客户名称">
+      <el-form-item label="客户名称"
+        prop="name">
         <el-select v-model="form.name"
           filterable
           placeholder="请选择客户"
@@ -28,17 +33,20 @@
             :value="customer.id"></el-option>
         </el-select>
       </el-form-item>
-      <el-form-item label="客户地址">
+      <el-form-item label="客户地址"
+        prop="address">
         <el-input v-model="form.address"
           disabled
           placeholder="请输入客户地址"></el-input>
       </el-form-item>
-      <el-form-item label="联系电话">
+      <el-form-item label="联系电话"
+        prop="phone">
         <el-input v-model="form.phone"
           disabled
           placeholder="请输入联系电话"></el-input>
       </el-form-item>
-      <el-form-item label="送货时间">
+      <el-form-item label="送货时间"
+        prop="date">
         <el-date-picker v-model="form.date"
           type="date"
           placeholder="请选择送货日期"
@@ -47,9 +55,10 @@
       </el-form-item>
     </el-form>
     <el-button type="primary"
-      @click="addGoods">添加</el-button>
+      @click="addRow">添加</el-button>
     <el-table class="table"
-      :data="tableData">
+      :data="tableData"
+      height="500px">
       <!-- <el-table-column label="产品名称"
         width="200">
         <template slot-scope="scope">
@@ -107,6 +116,7 @@
             v-model="scope.row[key]"
             filterable
             :placeholder="'请选择'+header.title"
+            size="small"
             @change="headerChange(header,scope)">
             <el-option v-for="item in header.list"
               :key="item.id"
@@ -115,13 +125,13 @@
           </el-select>
           <el-input v-if="header.type==='input'"
             v-model="scope.row[key]"
-            :disabled="header.disabled||scope.row.productType===''||false"
+            :disabled="isHeaderDisabled(header,scope)||scope.row.productType===''||false"
             :placeholder="'请输入'+header.title"
             size="small"
             @change="headerChange(header,scope)"></el-input>
           <el-input-number v-else-if="header.type==='inputNumber'"
             v-model="scope.row[key]"
-            :disabled="header.disabled||scope.row.productType===''||false"
+            :disabled="isHeaderDisabled(header,scope)||scope.row.productType===''||false"
             :precision="header.precision||0"
             :step="header.step||1"
             :min="header.min||0"
@@ -133,7 +143,7 @@
         label="操作"
         width="80">
         <template slot-scope="scope">
-          <el-button @click.native.prevent="deleteRow(scope.$index, scope.row)"
+          <el-button @click.native.prevent="deleteRow(scope.$index)"
             size="small"
             type="danger">
             <i class="el-icon-delete table__delete"></i>
@@ -141,10 +151,10 @@
         </template>
       </el-table-column>
     </el-table>
-    <div class="meta">备注：净尺寸和毛尺寸规格参考格式：100*100*100。</div>
+    <div class="meta">备注：净尺寸和毛尺寸规格参考格式：100*100*100(方板长*宽*高)，100*100(圆板直径*长度)。</div>
     <span slot="footer"
       class="dialog-footer">
-      <el-button @click="show = false">取 消</el-button>
+      <el-button @click="onCancel">重 置</el-button>
       <el-button type="primary"
         @click="onCertain">确 定</el-button>
     </span>
@@ -153,17 +163,22 @@
 
 <script>
 import moment from 'moment'
-import header from './goodsUtils.js'
+import tableHeader from './goodsUtils.js'
 export default {
   data() {
     return {
       show: false,
+      detail: {},
       form: {
         state: 0,
         name: '',
         address: '',
         phone: '',
         date: ''
+      },
+      rules: {
+        name: [{ required: true, message: '请选择客户', trigger: 'blur' }],
+        date: [{ required: true, message: '请选择日期', trigger: 'blur' }]
       },
       customerList: [],
       tableData: [],
@@ -173,50 +188,45 @@ export default {
 
   computed: {
     tableHeader() {
-      return header
+      return tableHeader
     }
   },
 
   mounted() {},
 
   methods: {
+    dialogOpen() {
+      this.reFindCustomerList().then(() => {
+        if (this.detail === {}) {
+          this.onCancel()
+        } else {
+          for (let key in this.form) {
+            this.form[key] = this.detail[key] || ''
+          }
+          this.tableData = this.detail.productData
+        }
+      })
+    },
+    isHeaderDisabled(header, scope) {
+      const { disabled } = header
+      switch (typeof disabled) {
+        case 'boolean':
+          return header.disabled
+        case 'function':
+          return header.disabled(scope.row)
+      }
+    },
     headerChange(header, scope) {
       if (header.change) {
         header.change(this, scope)
       }
     },
-    addGoods() {
-      this.tableData.unshift({
-        productName: '',
-        productType: '',
-        generalStandards: '',
-        additionalStandards: '',
-        size: '',
-        amount: 1,
-        weight: 0,
-        unitPrice: 1,
-        material: 0,
-        machining: 0,
-        flashSide: 0,
-        gasCut: 0,
-        saw: 0,
-        totalPrice: 0,
-        remarks: ''
+    reFindCustomerList() {
+      return this.$db.getData('CUSTOMER_DATA').then(res => {
+        this.customerList = res
       })
     },
-    dialogOpen() {
-      this.reFindCustomerList()
-      // this.reFindProductList().then(() => {
-      this.addGoods()
-      // })
-    },
-    productChange(value, scope) {
-      const { $index: index, row } = scope
-      row.productType = this.productList.find(item => {
-        return item.id === value
-      }).typeId
-      this.$set(this.tableData, index, row)
-    },
+
     customerChange(value) {
       const selected = this.customerList.find(item => item.id === value)
       this.form.address = selected.address
@@ -225,59 +235,60 @@ export default {
     dateChange(value) {
       this.form.date = moment(value).format('YYYY-MM-DD')
     },
-    reFindCustomerList() {
-      this.$db.getData('CUSTOMER_DATA').then(res => {
-        this.customerList = res
+    addRow() {
+      this.tableData.unshift({
+        productName: '',
+        productType: '',
+        generalStandards: '',
+        additionalStandards: '',
+        size: '',
+        amount: 1,
+        weight: '',
+        unitPrice: 1,
+        price: '',
+        material: 0,
+        machining: 0,
+        flashSide: 0,
+        gasCut: 0,
+        saw: 0,
+        totalPrice: '',
+        remarks: ''
       })
     },
-    // reFindProductList() {
-    //   return this.$db.getData('PRODUCT_DATA').then(res => {
-    //     this.productList = res
-    //   })
-    // },
-    standardsChange(value, scope, param) {
-      const obj = { generalStandards: '净尺寸', additionalStandards: '毛尺寸' }
-      const { $index: index, row } = scope
-      const standard = value.split('*')
-      const clear = () => {
-        row[param] = ''
-        this.$set(this.tableData, index, row)
-      }
-      if (standard.length !== 3) {
-        clear()
-        this.$message.warning(`请按照参考格式输入${obj[param]}规格！`)
-        return
-      }
-      let isAccord = standard.every(item => {
-        return item >= 0
-      })
-      if (!isAccord) {
-        clear()
-        this.$message.warning(`${obj[param]}规格只能为大于等于0的数字！`)
-        return
-      }
-      const otherParam = param.includes('general')
-        ? 'additionalStandards'
-        : 'generalStandards'
-      if (row[otherParam] === '') return
-      const other = row[otherParam].split('*')
-      const sum = standard
-        .map((item, index) => {
-          return Number(item) + Number(other[index])
-        })
-        .reduce((accumulator, currentValue) => accumulator * currentValue)
-
-      row.weight = (sum * 7.85 * 0.000001 * row.amount).toFixed(2)
-      this.$set(this.tableData, index, row)
+    deleteRow(index) {
+      this.tableData.splice(index, 1)
     },
     onCertain() {
-      console.log(this.form)
-
+      this.$refs.form.validate(valid => {
+        if (valid) {
+          const tableData = this.tableData.filter(data => {
+            return data.productName !== '' || data.size !== ''
+          })
+          if (tableData.length) {
+            const param = { id: this.detail.id || new Date().getTime() }
+            for (let key in this.form) {
+              param[key] = this.form[key]
+            }
+            param.productData = this.tableData
+            this.$db.putData('DELIVERYNOTE_DATA', param).then(() => {
+              this.$emit('success')
+              this.show = false
+            })
+          } else {
+            this.$message.warning('规格完整的产品数量不足一条！')
+          }
+        }
+      })
       // const param = {}
       // this.$db.putData('DELIVERYNOTE_DATA', param).then(() => {
       //   this.$emit('success')
       //   this.show = false
       // })
+    },
+    onCancel() {
+      this.$refs.form.resetFields()
+      this.tableData = []
+      this.addRow()
     }
   },
 
