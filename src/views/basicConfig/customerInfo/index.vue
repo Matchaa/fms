@@ -129,7 +129,7 @@ export default {
           ]
         })
         .then(res => {
-          this.tableData = res.map((item, index) => {
+          this.tableData = res.data.map((item, index) => {
             item.num = pageSize * (currentPage - 1) + index + 1
             return item
           })
@@ -140,7 +140,7 @@ export default {
           //     (name === '' || name === item.name) &&
           //     (phone === '' || phone === item.phone)
           // )
-          this.total = this.tableData.length
+          this.total = res.total
         })
     },
     onAddClick() {

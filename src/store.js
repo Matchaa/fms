@@ -75,8 +75,8 @@ export default new Vuex.Store({
       //     }
       //   ]
       // }
-    ]
-    // db: null
+    ],
+    userInfo: {}
   },
   getters: {
     indexDBVersion(state) {
@@ -84,9 +84,9 @@ export default new Vuex.Store({
     }
   },
   mutations: {
-    // changeDB: (state, db) => {
-    //   state.db = db
-    // }
+    changeUserInfo: (state, userInfo) => {
+      state.userInfo = userInfo
+    }
   },
   actions: {}
 })

@@ -1,9 +1,11 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-
+import Cookies from 'js-cookie'
+import store from '../store'
+import { Message } from 'element-ui'
 Vue.use(Router)
 
-export default new Router({
+const router = new Router({
   routes: [
     {
       path: '/login',
@@ -41,3 +43,23 @@ export default new Router({
     }
   ]
 })
+router.beforeEach((to, from, next) => {
+  if (to.name === 'login') {
+    next()
+    return
+  }
+  if (store.state.userInfo.name) {
+    next()
+  } else {
+    if (Cookies.get('token')) {
+      store.commit('changeUserInfo', {
+        name: '管理员'
+      })
+      next()
+    } else {
+      router.push({ name: 'login' })
+      Message.error({ showClose: true, message: '登录已过期，请重新登录' })
+    }
+  }
+})
+export default router

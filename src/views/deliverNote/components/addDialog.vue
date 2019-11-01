@@ -9,21 +9,27 @@
       :rules="rules"
       ref="form"
       :inline="true">
+      <el-form-item label="送货单号"
+        prop="num">
+        <el-input v-model="form.num"
+          disabled
+          placeholder="系统自动输入送货单号"></el-input>
+      </el-form-item>
       <el-form-item label="状态"
         prop="state">
         <el-select v-model="form.state"
           placeholder="请选择状态">
           <el-option label="未打印"
-            :value="0"></el-option>
+            value="未打印"></el-option>
           <el-option label="未发货"
-            :value="1"></el-option>
+            value="未发货"></el-option>
           <el-option label="已发货"
-            :value="2"></el-option>
+            value="已发货"></el-option>
         </el-select>
       </el-form-item>
       <el-form-item label="客户名称"
-        prop="name">
-        <el-select v-model="form.name"
+        prop="customer">
+        <el-select v-model="form.customer"
           filterable
           placeholder="请选择客户"
           @change="customerChange">
@@ -57,8 +63,7 @@
     <el-button type="primary"
       @click="addRow">添加</el-button>
     <el-table class="table"
-      :data="tableData"
-      height="500px">
+      :data="tableData">
       <!-- <el-table-column label="产品名称"
         width="200">
         <template slot-scope="scope">
@@ -170,19 +175,19 @@ export default {
       show: false,
       detail: {},
       form: {
-        state: 0,
-        name: '',
+        state: '未打印',
+        num: '',
+        customer: '',
         address: '',
         phone: '',
         date: ''
       },
       rules: {
-        name: [{ required: true, message: '请选择客户', trigger: 'blur' }],
+        customer: [{ required: true, message: '请选择客户', trigger: 'blur' }],
         date: [{ required: true, message: '请选择日期', trigger: 'blur' }]
       },
       customerList: [],
-      tableData: [],
-      productList: []
+      tableData: []
     }
   },
 
@@ -197,7 +202,7 @@ export default {
   methods: {
     dialogOpen() {
       this.reFindCustomerList().then(() => {
-        if (this.detail === {}) {
+        if (!Object.keys(this.detail).length) {
           this.onCancel()
         } else {
           for (let key in this.form) {
@@ -223,7 +228,7 @@ export default {
     },
     reFindCustomerList() {
       return this.$db.getData('CUSTOMER_DATA').then(res => {
-        this.customerList = res
+        this.customerList = res.data
       })
     },
 
@@ -237,6 +242,7 @@ export default {
     },
     addRow() {
       this.tableData.unshift({
+        product: '',
         productName: '',
         productType: '',
         generalStandards: '',
@@ -262,13 +268,20 @@ export default {
       this.$refs.form.validate(valid => {
         if (valid) {
           const tableData = this.tableData.filter(data => {
-            return data.productName !== '' || data.size !== ''
+            return data.product !== '' || data.size !== ''
           })
           if (tableData.length) {
-            const param = { id: this.detail.id || new Date().getTime() }
+            const param = {
+              id: this.detail.id || new Date().getTime(),
+              customerName: this.customerList.find(
+                customer => customer.id === this.form.customer
+              ).name
+            }
             for (let key in this.form) {
               param[key] = this.form[key]
             }
+            param.num =
+              this.detail.num || moment(new Date()).format('YYYYMMDDHHmmss')
             param.productData = this.tableData
             this.$db.putData('DELIVERYNOTE_DATA', param).then(() => {
               this.$emit('success')
@@ -279,11 +292,6 @@ export default {
           }
         }
       })
-      // const param = {}
-      // this.$db.putData('DELIVERYNOTE_DATA', param).then(() => {
-      //   this.$emit('success')
-      //   this.show = false
-      // })
     },
     onCancel() {
       this.$refs.form.resetFields()

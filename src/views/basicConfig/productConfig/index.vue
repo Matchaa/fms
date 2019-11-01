@@ -115,11 +115,11 @@ export default {
           search: [{ name: 'name', value: name }]
         })
         .then(res => {
-          this.tableData = res.map((item, index) => {
+          this.tableData = res.data.map((item, index) => {
             item.num = pageSize * (currentPage - 1) + index + 1
             return item
           })
-          this.total = this.tableData.length
+          this.total = res.total
         })
     },
     onAddClick() {

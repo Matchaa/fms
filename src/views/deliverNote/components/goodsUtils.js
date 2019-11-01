@@ -1,7 +1,7 @@
 import indexedDB from '@/utils/indexDB.js'
 
 indexedDB.getData('PRODUCT_DATA').then(res => {
-  tableHeader.productName.list = res
+  tableHeader.product.list = res.data
 })
 const clearValue = (self, scope, param, value) => {
   const { $index: index, row } = scope
@@ -39,18 +39,20 @@ const setTotalPrice = (self, scope) => {
   setValue(self, scope, 'totalPrice', totalprice)
 }
 const tableHeader = {
-  productName: {
+  product: {
     title: '产品名称',
     type: 'select',
     list: [],
     change: (self, scope) => {
       let { $index: index, row } = scope
-      const productType = tableHeader.productName.list.find(item => {
-        return item.id === row.productName
-      }).typeId
+      const product = tableHeader.product.list.find(item => {
+        return item.id === row.product
+      })
+      const { typeId: productType, name: productName } = product
       if (row.productType !== productType) {
         row = {
-          productName: row.productName,
+          product: row.product,
+          productName: productName,
           productType: productType,
           generalStandards: '',
           additionalStandards: '',

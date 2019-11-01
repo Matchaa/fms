@@ -95,7 +95,7 @@ export default {
     onMenuClick(menu) {
       this.$emit('change', menu)
       this.$emit('activeChange', menu.name)
-      this.$router.push({ name: menu.name })
+      this.$router.replace({ name: menu.name })
     }
   },
 

@@ -50,6 +50,7 @@ const getData = function(storeName, param = {}) {
           data.push(cursor.value)
           cursor.continue()
         } else {
+          const total = data.length
           const { pageSize, pageIndex, search } = param
           // const func = data => {}
           if (pageSize && pageIndex) {
@@ -70,7 +71,7 @@ const getData = function(storeName, param = {}) {
               )
             )
           }
-          resolve(data)
+          resolve({ data, total })
         }
       })
     })

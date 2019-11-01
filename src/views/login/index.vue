@@ -40,6 +40,7 @@
 </template>
 
 <script>
+import Cookies from 'js-cookie'
 export default {
   data() {
     return {
@@ -96,6 +97,16 @@ export default {
             })
           }
           request.onsuccess = () => {
+            Cookies.set('token', 123456)
+            this.$store.commit('changeUserInfo', {
+              name: '管理员'
+            })
+            // sessionStorage.setItem(
+            //   'userInfo',
+            //   JSON.stringify({
+            //     name: 'admin'
+            //   })
+            // )
             this.$router.push({ name: 'layout' })
           }
         } else {

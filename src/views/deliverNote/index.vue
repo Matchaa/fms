@@ -4,16 +4,19 @@
     <el-form :inline="true">
       <el-form-item label="送货单号">
         <el-input v-model="form.num"
-          placeholder="请输入送货单号"></el-input>
+          placeholder="请输入送货单号"
+          @change="searchTableData"></el-input>
       </el-form-item>
       <el-form-item label="客户名称">
         <el-input v-model="form.name"
-          placeholder="请输入客户名称"></el-input>
+          placeholder="请输入客户名称"
+          @change="searchTableData"></el-input>
       </el-form-item>
       <el-form-item label="送货时间">
         <el-date-picker v-model="form.date"
           type="date"
-          placeholder="选择送货日期">
+          placeholder="选择送货日期"
+          @change="searchTableData">
         </el-date-picker>
       </el-form-item>
       <el-form-item>
@@ -29,7 +32,7 @@
       <el-table-column type="expand">
         <template slot-scope="scope">
           <el-table class="expand-table"
-            :data="scope.row.detail">
+            :data="scope.row.productData">
             <el-table-column v-for="header in expandTableHeader"
               :key="header.name"
               :prop="header.name"
@@ -89,6 +92,10 @@ export default {
 
       tableHeader: [
         {
+          title: '序号',
+          name: 'sort'
+        },
+        {
           title: '状态',
           name: 'state'
         },
@@ -98,7 +105,7 @@ export default {
         },
         {
           title: '客户名称',
-          name: 'name'
+          name: 'customerName'
         },
         {
           title: '客户地址',
@@ -116,52 +123,11 @@ export default {
           width: 100
         }
       ],
-      tableData: [
-        {
-          state: '已发货',
-          num: 123,
-          name: '舜禹集团',
-          address: '浙江省余姚市',
-          phone: 1585883882,
-          date: '2019-09-28',
-          detail: [
-            {
-              num: 12345,
-              generalStandards: '200*200*100',
-              additionalStandards: '10*10*20',
-              amount: 124,
-              weight: 123,
-              unitPrice: 11122,
-              material: 234,
-              machining: 555,
-              flashSide: 88,
-              gasCut: 111,
-              saw: 222,
-              totalPrice: 123,
-              remake: '备注'
-            },
-            {
-              num: 12345,
-              generalStandards: '200*200*100',
-              additionalStandards: '10*10*20',
-              amount: 124,
-              weight: 123,
-              unitPrice: 11122,
-              material: 234,
-              machining: 555,
-              flashSide: 88,
-              gasCut: 111,
-              saw: 222,
-              totalPrice: 123,
-              remake: '备注'
-            }
-          ]
-        }
-      ],
+      tableData: [],
       // （送货单）钢号、规格（净尺寸规格/毛尺寸规格）、件数、重量、单价、材料费、加工费（方：精加工、飞边、气割费，圆：锯费）、总金额、备注
       expandTableHeader: [
         {
-          title: '钢号',
+          title: '产品名称',
           name: 'productName'
         },
         {
@@ -227,9 +193,39 @@ export default {
 
   computed: {},
 
-  mounted() {},
+  mounted() {
+    this.reFindTableData()
+  },
 
   methods: {
+    reFindTableData() {
+      const {
+        pageSize,
+        currentPage,
+        form: { num, name, date }
+      } = this
+      this.$db
+        .getData('DELIVERYNOTE_DATA', {
+          pageSize: pageSize,
+          pageIndex: currentPage,
+          search: [
+            { name: 'num', value: num },
+            { name: 'name', value: name },
+            { name: 'date', value: date }
+          ]
+        })
+        .then(res => {
+          this.tableData = res.data.map((item, index) => {
+            item.sort = pageSize * (currentPage - 1) + index + 1
+            return item
+          })
+          this.total = res.total
+        })
+    },
+    searchTableData() {
+      this.currentPage = 1
+      this.reFindTableData()
+    },
     onAddClick() {
       this.$refs.addDialog.detail = {}
       this.$refs.addDialog.show = true
@@ -255,9 +251,12 @@ export default {
         })
       })
     },
-    onSizeChange() {},
+    onSizeChange() {
+      this.reFindTableData()
+    },
     onCurrentChange(value) {
       this.currentPage = value
+      this.reFindTableData()
     }
   },
 
