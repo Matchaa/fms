@@ -53,6 +53,9 @@ export default new Vuex.Store({
             unique: false
           }
         ]
+      },
+      {
+        name: 'COMPANY_INFO'
       }
       // {
       //   name: 'STATISTICS_DATA',

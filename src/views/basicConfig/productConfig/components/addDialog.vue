@@ -104,6 +104,11 @@ export default {
           this.$db.putData('PRODUCT_DATA', param).then(() => {
             this.$emit('success')
             this.show = false
+            if (this.detail.id) {
+              this.$message.success('修改产品信息成功！')
+            } else {
+              this.$message.success('新增产品信息成功！')
+            }
           })
         }
       })

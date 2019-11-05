@@ -7,7 +7,7 @@
       status-icon
       :rules="rules"
       ref="form"
-      label-width="100px"
+      label-width="80px"
       hide-required-asterisk>
       <el-form-item label="旧密码"
         prop="oldPassword">
@@ -42,8 +42,8 @@ export default {
   data() {
     var validateCheckPassword = (rule, value, callback) => {
       if (value === '') {
-        callback(new Error('请再次输入密码'))
-      } else if (value !== this.ruleForm.newPassword) {
+        callback(new Error('请再次输入新密码'))
+      } else if (value !== this.form.newPassword) {
         callback(new Error('两次输入密码不一致!'))
       } else {
         callback()

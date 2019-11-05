@@ -19,6 +19,7 @@
           </span>
           <el-dropdown-menu slot="dropdown">
             <el-dropdown-item command="userInfo">修改个人信息</el-dropdown-item>
+            <el-dropdown-item command="companyInfo">修改公司信息</el-dropdown-item>
             <el-dropdown-item command="password">修改密码</el-dropdown-item>
             <el-dropdown-item divided
               command="logout">退出登录</el-dropdown-item>
@@ -42,7 +43,8 @@
       </el-main>
     </el-container>
     <modify-password ref="modifyPass"></modify-password>
-    <modifyUserInfo ref="modifyUserInfo"></modifyUserInfo>
+    <modify-userInfo ref="modifyUserInfo"></modify-userInfo>
+    <modify-companyInfo ref="modifyCompanyInfo"></modify-companyInfo>
   </el-container>
 </template>
 
@@ -83,6 +85,8 @@ export default {
     dropdownMenuClick(value) {
       if (value === 'userInfo') {
         this.$refs.modifyUserInfo.show = true
+      } else if (value === 'companyInfo') {
+        this.$refs.modifyCompanyInfo.show = true
       } else if (value === 'password') {
         this.$refs.modifyPass.show = true
       } else if (value === 'logout') {
@@ -119,7 +123,8 @@ export default {
   components: {
     sideBar: () => import('./sideBar.vue'),
     modifyPassword: () => import('./modifyPasswordDialog.vue'),
-    modifyUserInfo: () => import('./modifyUserinfoDialog.vue')
+    modifyUserInfo: () => import('./modifyUserinfoDialog.vue'),
+    modifyCompanyInfo: () => import('./modifyCompanyinfoDialog.vue')
   },
   beforeDestroy() {
     sessionStorage.removeItem('navigation')

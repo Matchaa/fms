@@ -31,6 +31,10 @@
           @change="searchTableData">
         </el-date-picker>
       </el-form-item>
+      <el-form-item>
+        <el-button type="primary"
+          @click="checkEcharts">查看统计图</el-button>
+      </el-form-item>
     </el-form>
     <el-table class="table"
       :data="tableData"
@@ -54,6 +58,7 @@
       layout="total, sizes, prev, pager, next, jumper"
       :total="total">
     </el-pagination>
+    <echarts ref="echarts"></echarts>
   </div>
 </template>
 
@@ -115,6 +120,9 @@ export default {
   },
 
   methods: {
+    checkEcharts() {
+      this.$refs.echarts.show = true
+    },
     reFindCustomerList() {
       return this.$db.getData('CUSTOMER_DATA').then(res => {
         this.customerList = res.data
@@ -168,7 +176,9 @@ export default {
     }
   },
 
-  components: {}
+  components: {
+    echarts: () => import('./components/echarts.vue')
+  }
 }
 </script>
 <style lang='scss' scoped>

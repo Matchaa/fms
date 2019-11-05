@@ -91,6 +91,11 @@ export default {
           this.$db.putData('CUSTOMER_DATA', param).then(() => {
             this.$emit('success')
             this.show = false
+            if (this.detail.id) {
+              this.$message.success('修改客户信息成功！')
+            } else {
+              this.$message.success('新增客户信息成功！')
+            }
           })
         }
       })

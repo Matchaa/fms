@@ -6,7 +6,7 @@
     <el-form :model="form"
       :rules="rules"
       ref="form"
-      label-width="100px"
+      label-width="80px"
       hide-required-asterisk>
       <el-form-item label="用户名"
         prop="name">

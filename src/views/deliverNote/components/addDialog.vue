@@ -285,6 +285,12 @@ export default {
             param.productData = this.tableData
             this.$db.putData('DELIVERYNOTE_DATA', param).then(() => {
               this.$emit('success')
+              if (this.detail.id) {
+                this.$message.success('修改送货单成功！')
+              } else {
+                this.$message.success('新增送货单成功！')
+              }
+
               this.show = false
             })
           } else {
