@@ -76,6 +76,7 @@
       :total="total">
     </el-pagination>
     <add-dialog ref="addDialog"></add-dialog>
+    <print-preview ref="printPreview"></print-preview>
   </div>
 
 </template>
@@ -233,7 +234,9 @@ export default {
     // 打印
     onPrintClick() {},
     // 打印预览
-    onPrintPreviewClick() {},
+    onPrintPreviewClick() {
+      this.$refs.printPreview.show = true
+    },
     onEditClick(index, row) {
       this.$refs.addDialog.detail = row
       this.$refs.addDialog.show = true
@@ -261,7 +264,8 @@ export default {
   },
 
   components: {
-    addDialog: () => import('./components/addDialog')
+    addDialog: () => import('./components/addDialog'),
+    printPreview: () => import('./components/printPreview.vue')
   }
 }
 </script>
