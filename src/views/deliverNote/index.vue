@@ -63,6 +63,9 @@
           <el-button size="mini"
             type="danger"
             @click="onDeleteClick(scope.$index)">删除</el-button>
+          <el-button size="mini"
+            type="primary"
+            @click="onPrintClick(scope.row)">打印</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -232,7 +235,10 @@ export default {
       this.$refs.addDialog.show = true
     },
     // 打印
-    onPrintClick() {},
+    onPrintClick(row) {
+      this.$refs.printPreview.detail = row
+      this.$refs.printPreview.show = true
+    },
     // 打印预览
     onPrintPreviewClick() {
       this.$refs.printPreview.show = true
