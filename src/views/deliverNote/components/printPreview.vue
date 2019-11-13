@@ -19,7 +19,8 @@
         <span>送货时间:{{detail.date}}</span>
         <span>制单人:{{$store.state.userInfo.name}}</span>
       </div>
-      <el-table :data="tableData"
+      <el-table class="table"
+        :data="tableData"
         border
         :span-method="arraySpanMethod"
         style="width: 100%">
@@ -143,6 +144,8 @@ export default {
       const price = this.detail.productData
         .reduce((acc, cur) => acc + cur.totalPrice, 0)
         .toFixed(2)
+      console.log(price, this.digitUppercase(price))
+
       this.tableData.push({
         sort: `合计金额(大写)：${this.digitUppercase(price)}`,
         totalPrice: `(小写)：¥${price}`
@@ -191,10 +194,11 @@ export default {
       iframeWin.print()
       document.body.removeChild(iframeDom)
     },
-    digitUppercase(n) {
+    digitUppercase(price) {
       const fraction = ['角', '分']
       const digit = ['零', '壹', '贰', '叁', '肆', '伍', '陆', '柒', '捌', '玖']
       const unit = [['元', '万', '亿'], ['', '拾', '佰', '仟']]
+      let n = Number(price)
       if (typeof n === 'number') {
         const head = n < 0 ? '-' : ''
         n = Math.abs(n)
@@ -252,6 +256,7 @@ h2 {
     top: 6px;
     color: red;
     font-weight: bold;
+    font-size: 12px;
   }
 }
 .customer {
@@ -267,6 +272,11 @@ h2 {
     grid-column-start: 2;
     grid-column-end: 4;
   }
+}
+/deep/ .el-table td,
+/deep/ .el-table th {
+  padding: 0 !important;
+  height: 23px;
 }
 h5 {
   text-align: left;
