@@ -64,13 +64,11 @@ export default {
         },
         {
           title: '产品名称',
-          name: 'name',
-          width: 150
+          name: 'name'
         },
         {
           title: '规格',
-          name: 'standards',
-          width: 150
+          name: 'standards'
         },
         {
           title: '重量',
@@ -80,16 +78,16 @@ export default {
           title: '单价',
           name: 'unitPrice'
         },
-        // {
-        //   title: '材料费',
-        //   name: 'material'
-        // },
-        // {
-        //   title: '加工费',
-        //   name: 'machinPrice'
-        // },
         {
-          title: '总金额',
+          title: '材料费',
+          name: 'material'
+        },
+        {
+          title: '加工费',
+          name: 'machinPrice'
+        },
+        {
+          title: '金额',
           name: 'totalPrice'
         },
         {
@@ -110,7 +108,7 @@ export default {
       if (rowIndex === this.tableData.length - 1) {
         if (columnIndex === 0) {
           return [1, 5]
-        } else if (columnIndex === 5) {
+        } else if (columnIndex === 7) {
           return [1, 2]
         } else {
           return [0, 0]
@@ -126,7 +124,6 @@ export default {
     },
     dialogOpen() {
       this.reFindCompanyInfo()
-      console.log(this.detail)
       this.tableData = this.detail.productData.map((item, index) => {
         return {
           sort: index + 1,
@@ -138,14 +135,12 @@ export default {
           remarks: item.remarks
         }
       })
-      for (let i = this.tableData.length; i < 7; i++) {
+      for (let i = this.tableData.length; i < 9; i++) {
         this.tableData.push({})
       }
       const price = this.detail.productData
         .reduce((acc, cur) => acc + cur.totalPrice, 0)
         .toFixed(2)
-      console.log(price, this.digitUppercase(price))
-
       this.tableData.push({
         sort: `合计金额(大写)：${this.digitUppercase(price)}`,
         totalPrice: `(小写)：¥${price}`
@@ -238,9 +233,10 @@ export default {
 <style lang='scss' scoped>
 #print {
   text-align: center;
+  font-size: 12px;
 }
 h2 {
-  margin: 0;
+  margin: 5px;
 }
 .tel {
   margin-right: 10px;
@@ -256,7 +252,6 @@ h2 {
     top: 6px;
     color: red;
     font-weight: bold;
-    font-size: 12px;
   }
 }
 .customer {
@@ -267,7 +262,7 @@ h2 {
   grid-auto-flow: row;
   justify-items: start;
   justify-content: space-between;
-  margin-bottom: 5px;
+  margin-bottom: 15px;
   &__address {
     grid-column-start: 2;
     grid-column-end: 4;
@@ -277,6 +272,17 @@ h2 {
 /deep/ .el-table th {
   padding: 0 !important;
   height: 23px;
+}
+/deep/.el-table--scrollable-x .el-table__body-wrapper {
+  overflow: hidden;
+}
+/deep/ .el-table--border td,
+.el-table--border th {
+  border-right: 2px solid #ebeef5;
+}
+/deep/ .el-table td,
+.el-table th.is-leaf {
+  border-bottom: 2px solid #ebeef5;
 }
 h5 {
   text-align: left;
