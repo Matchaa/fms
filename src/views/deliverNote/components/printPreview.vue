@@ -1,51 +1,51 @@
 <!--打印预览-->
 <template>
-  <el-dialog title="打印预览"
+  <!-- <el-dialog title="打印预览"
     :visible.sync="show"
-    width="600px"
-    @opened="dialogOpen">
-    <div id="print">
-      <h2>{{companyInfo.name}}</h2>
-      <div>地址:{{companyInfo.address}}</div>
-      <span class="tel">电话:{{companyInfo.tel}}</span><span>传真:{{companyInfo.fax}}</span>
-      <div class="title">
-        <h2>1 2 3</h2>
-        <span class="title__odd-numbers">No.{{detail.num}}</span>
-      </div>
-      <div class="customer">
-        <span>客户姓名:{{detail.customerName}}</span>
-        <span class="customer__address">客户地址:{{detail.address}}</span>
-        <span>客户电话:{{detail.phone}}</span>
-        <span>送货时间:{{detail.date}}</span>
-        <span>制单人:{{$store.state.userInfo.name}}</span>
-      </div>
-      <el-table class="table"
-        :data="tableData"
-        border
-        :span-method="arraySpanMethod"
-        style="width: 100%">
-        <el-table-column v-for="header in tableHeader"
-          :key="header.name"
-          :prop="header.name"
-          :label="header.title"
-          :width="header.width||''">
-          <!-- <template slot-scope="scope">
+    width="800px"
+    @opened="dialogOpen"> -->
+  <div id="print">
+    <h2>{{companyInfo.name}}</h2>
+    <div>地址:{{companyInfo.address}}</div>
+    <span class="tel">电话:{{companyInfo.tel}}</span><span>传真:{{companyInfo.fax}}</span>
+    <div class="title">
+      <h2>1 2 3</h2>
+      <span class="title__odd-numbers">No.{{detail.num}}</span>
+    </div>
+    <div class="customer">
+      <span>客户姓名:{{detail.customerName}}</span>
+      <span class="customer__address">客户地址:{{detail.address}}</span>
+      <span>客户电话:{{detail.phone}}</span>
+      <span>送货时间:{{detail.date}}</span>
+      <span>制单人:{{$store.state.userInfo.name}}</span>
+    </div>
+    <el-table class="table"
+      :data="tableData"
+      border
+      :span-method="arraySpanMethod"
+      style="width: 100%">
+      <el-table-column v-for="header in tableHeader"
+        :key="header.name"
+        :prop="header.name"
+        :label="header.title"
+        :width="header.width||''">
+        <!-- <template slot-scope="scope">
             <span>{{scope.row[header.name]||'--'}}</span>
           </template> -->
-        </el-table-column>
-      </el-table>
-      <h5>注：以上货品请核对重量，如有质量问题，请在收货后三天内通知本公司，逾期恕不负责</h5>
-      <div class="print-footer">
-        <span>送货单位及经手人(盖章)：</span>
-        <span>收货单位及经手人(盖章)：</span>
-      </div>
+      </el-table-column>
+    </el-table>
+    <h5>注：以上货品请核对重量，如有质量问题，请在收货后三天内通知本公司，逾期恕不负责</h5>
+    <div class="print-footer">
+      <span>送货单位及经手人(盖章)：</span>
+      <span>收货单位及经手人(盖章)：</span>
     </div>
-    <span slot="footer"
+  </div>
+  <!-- <span slot="footer"
       class="dialog-footer">
       <el-button type="primary"
         @click="onPrintClick">打 印</el-button>
     </span>
-  </el-dialog>
+  </el-dialog> -->
 </template>
 
 <script>
@@ -107,7 +107,7 @@ export default {
     arraySpanMethod({ rowIndex, columnIndex }) {
       if (rowIndex === this.tableData.length - 1) {
         if (columnIndex === 0) {
-          return [1, 5]
+          return [1, 7]
         } else if (columnIndex === 7) {
           return [1, 2]
         } else {
@@ -122,7 +122,7 @@ export default {
         }
       })
     },
-    dialogOpen() {
+    printPreview() {
       this.reFindCompanyInfo()
       this.tableData = this.detail.productData.map((item, index) => {
         return {
@@ -145,10 +145,13 @@ export default {
         sort: `合计金额(大写)：${this.digitUppercase(price)}`,
         totalPrice: `(小写)：¥${price}`
       })
+      this.$nextTick(() => {
+        this.printPartial(document.querySelector('#print'))
+      })
     },
-    onPrintClick() {
-      this.printPartial(document.querySelector('#print'))
-    },
+    // onPrintClick() {
+    //   this.printPartial(document.querySelector('#print'))
+    // },
     printPartial(dom) {
       if (!dom) return
       let copyDom = document.createElement('span')
@@ -277,11 +280,11 @@ h2 {
   overflow: hidden;
 }
 /deep/ .el-table--border td,
-.el-table--border th {
+/deep/ .el-table--border th {
   border-right: 2px solid #ebeef5;
 }
 /deep/ .el-table td,
-.el-table th.is-leaf {
+/deep/ .el-table th.is-leaf {
   border-bottom: 2px solid #ebeef5;
 }
 h5 {

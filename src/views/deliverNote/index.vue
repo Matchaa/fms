@@ -22,8 +22,8 @@
       <el-form-item>
         <el-button type="primary"
           @click="onAddClick">新增</el-button>
-        <el-button @click="onPrintClick">打印</el-button>
-        <el-button @click="onPrintPreviewClick">打印预览</el-button>
+        <!-- <el-button @click="onPrintClick">打印</el-button>
+        <el-button @click="onPrintPreviewClick">打印预览</el-button> -->
       </el-form-item>
     </el-form>
     <el-table class="table"
@@ -237,12 +237,13 @@ export default {
     // 打印
     onPrintClick(row) {
       this.$refs.printPreview.detail = row
-      this.$refs.printPreview.show = true
+      this.$refs.printPreview.printPreview()
+      // this.$refs.printPreview.show = true
     },
     // 打印预览
-    onPrintPreviewClick() {
-      this.$refs.printPreview.show = true
-    },
+    // onPrintPreviewClick() {
+    //   this.$refs.printPreview.show = true
+    // },
     onEditClick(index, row) {
       this.$refs.addDialog.detail = row
       this.$refs.addDialog.show = true
