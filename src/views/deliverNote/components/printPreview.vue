@@ -237,9 +237,10 @@ export default {
 #print {
   text-align: center;
   font-size: 12px;
+  visibility: hidden;
 }
 h2 {
-  margin: 5px;
+  margin: 0;
 }
 .tel {
   margin-right: 10px;
@@ -265,7 +266,7 @@ h2 {
   grid-auto-flow: row;
   justify-items: start;
   justify-content: space-between;
-  margin-bottom: 15px;
+  margin-bottom: 10px;
   &__address {
     grid-column-start: 2;
     grid-column-end: 4;
@@ -279,13 +280,15 @@ h2 {
 /deep/.el-table--scrollable-x .el-table__body-wrapper {
   overflow: hidden;
 }
-/deep/ .el-table--border td,
+
 /deep/ .el-table--border th {
   border-right: 2px solid #ebeef5;
 }
-/deep/ .el-table td,
-/deep/ .el-table th.is-leaf {
-  border-bottom: 2px solid #ebeef5;
+
+/deep/ .el-table--border {
+  border: none;
+  border-top: 2px solid #ebeef5;
+  border-left: 2px solid #ebeef5;
 }
 h5 {
   text-align: left;
@@ -304,6 +307,7 @@ h5 {
   }
   #print {
     margin: 1cm;
+    visibility: visible;
   }
 }
 </style>
