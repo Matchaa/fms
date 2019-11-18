@@ -1,6 +1,6 @@
 <!--echarts-->
 <template>
-  <el-dialog title="查看统计图"
+  <el-dialog title="统计图"
     :visible.sync="show"
     width="1000px"
     @opened="dialogOpen">

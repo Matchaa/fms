@@ -8,9 +8,15 @@
           @change="searchTableData"></el-input>
       </el-form-item>
       <el-form-item label="客户名称">
-        <el-input v-model="form.name"
-          placeholder="请输入客户名称"
-          @change="searchTableData"></el-input>
+        <el-select v-model="form.name"
+          filterable
+          placeholder="请选择客户"
+          @change="searchTableData">
+          <el-option v-for="customer in customerList"
+            :key="customer.id"
+            :label="customer.name"
+            :value="customer.id"></el-option>
+        </el-select>
       </el-form-item>
       <el-form-item label="送货时间">
         <el-date-picker v-model="form.date"
@@ -93,7 +99,7 @@ export default {
         name: '',
         date: ''
       },
-
+      customerList: [],
       tableHeader: [
         {
           title: '序号',
@@ -198,10 +204,16 @@ export default {
   computed: {},
 
   mounted() {
+    this.reFindCustomerList()
     this.reFindTableData()
   },
 
   methods: {
+    reFindCustomerList() {
+      return this.$db.getData('CUSTOMER_DATA').then(res => {
+        this.customerList = res.data
+      })
+    },
     reFindTableData() {
       const {
         pageSize,

@@ -54,12 +54,12 @@ export default {
     return {
       menuList: [
         {
-          title: '导航一',
+          title: '送货单',
           index: '1',
           name: 'deliverNote'
         },
         {
-          title: '导航二',
+          title: '数据统计',
           index: '2',
           name: 'statistics'
         },

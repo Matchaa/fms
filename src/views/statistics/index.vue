@@ -182,4 +182,8 @@ export default {
 }
 </script>
 <style lang='scss' scoped>
+.page {
+  margin-top: 20px;
+  float: right;
+}
 </style>

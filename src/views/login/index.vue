@@ -98,13 +98,18 @@ export default {
           }
           request.onsuccess = () => {
             Cookies.set('token', 123456)
-            this.$db.putData('COMPANY_INFO', {
-              id: 1,
-              name: '宁海县钱兴金属有限公司',
-              address: '浙江省宁波市宁海县模具城',
-              tel: '0574-66666666',
-              fax: '0574-66666666'
+            this.$db.getData('COMPANY_INFO').then(res => {
+              if (!res.total) {
+                this.$db.putData('COMPANY_INFO', {
+                  id: 1,
+                  name: '宁海县钱兴金属有限公司',
+                  address: '浙江省宁波市宁海县模具城',
+                  tel: '0574-66666666',
+                  fax: '0574-66666666'
+                })
+              }
             })
+
             this.$store.commit('changeUserInfo', {
               name: '管理员'
             })
