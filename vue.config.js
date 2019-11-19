@@ -1,5 +1,7 @@
 const path = require('path')
 module.exports = {
+  publicPath: './',
+  outputDir: 'docs', // 构建输出目录
   // pages: {
   //   index: {
   //     // page的入口
