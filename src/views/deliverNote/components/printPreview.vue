@@ -116,14 +116,14 @@ export default {
       }
     },
     reFindCompanyInfo() {
-      this.$db.getData('COMPANY_INFO').then(res => {
+      return this.$db.getData('COMPANY_INFO').then(res => {
         if (res.total) {
           this.companyInfo = res.data[0]
         }
       })
     },
-    printPreview() {
-      this.reFindCompanyInfo()
+    async printPreview() {
+      await this.reFindCompanyInfo()
       this.tableData = this.detail.productData.map((item, index) => {
         return {
           sort: index + 1,
@@ -145,9 +145,9 @@ export default {
         sort: `合计金额(大写)：${this.digitUppercase(price)}`,
         totalPrice: `(小写)：¥${price}`
       })
-      this.$nextTick(() => {
+      setTimeout(() => {
         this.printPartial(document.querySelector('#print'))
-      })
+      }, 1000)
     },
     // onPrintClick() {
     //   this.printPartial(document.querySelector('#print'))
