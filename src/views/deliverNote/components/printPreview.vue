@@ -145,7 +145,9 @@ export default {
         sort: `合计金额(大写)：${this.digitUppercase(price)}`,
         totalPrice: `(小写)：¥${price}`
       })
-      this.printPartial(document.querySelector('#print'))
+      setTimeout(() => {
+        this.printPartial(document.querySelector('#print'))
+      }, 0)
     },
     // onPrintClick() {
     //   this.printPartial(document.querySelector('#print'))
@@ -186,8 +188,8 @@ export default {
       const iframeDocs = iframeWin.document
       iframeDocs.write(`<!doctype html>`)
       iframeDocs.write(htmlTemp)
+      iframeWin.focus()
       setTimeout(() => {
-        iframeWin.focus()
         iframeWin.print()
         document.body.removeChild(iframeDom)
       }, 1000)
