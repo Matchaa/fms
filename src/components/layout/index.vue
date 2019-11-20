@@ -15,7 +15,9 @@
         <el-dropdown trigger="click"
           @command="dropdownMenuClick">
           <span class="header__dropdown">
-            您好，{{username}}<i class="el-icon-arrow-down el-icon--right"></i>
+            <span v-if="username">您好，{{username}}<i class="el-icon-arrow-down el-icon--right"></i></span>
+            <span v-else
+              @click="$router.push({name:'login'})">登录</span>
           </span>
           <el-dropdown-menu slot="dropdown">
             <el-dropdown-item command="userInfo">修改个人信息</el-dropdown-item>

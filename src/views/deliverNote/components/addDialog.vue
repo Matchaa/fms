@@ -268,7 +268,7 @@ export default {
       this.$refs.form.validate(valid => {
         if (valid) {
           const tableData = this.tableData.filter(data => {
-            return data.product !== '' || data.size !== ''
+            return data.product !== '' && data.size !== ''
           })
           if (tableData.length) {
             const param = {

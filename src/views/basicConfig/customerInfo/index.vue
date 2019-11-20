@@ -51,7 +51,7 @@
       :total="total">
     </el-pagination>
     <add-dialog ref="addDialog"
-      @success="reFindTableData"></add-dialog>
+      @success="searchTableData"></add-dialog>
   </div>
 </template>
 
@@ -144,12 +144,12 @@ export default {
         })
     },
     onAddClick() {
-      this.$refs.addDialog.show = true
       this.$refs.addDialog.detail = {}
+      this.$refs.addDialog.show = true
     },
     onEditClick(row) {
-      this.$refs.addDialog.show = true
       this.$refs.addDialog.detail = row
+      this.$refs.addDialog.show = true
     },
     onDeleteClick(row) {
       this.$db.deleteData('CUSTOMER_DATA', row.id).then(() => {

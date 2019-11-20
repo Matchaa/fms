@@ -60,7 +60,7 @@
           <span>{{scope.row[header.name]||'--'}}</span>
         </template>
       </el-table-column>
-      <el-table-column width="150px"
+      <el-table-column width="220px"
         label="操作"
         fixed="right">
         <template slot-scope="scope">
@@ -84,7 +84,8 @@
       layout="total, sizes, prev, pager, next, jumper"
       :total="total">
     </el-pagination>
-    <add-dialog ref="addDialog"></add-dialog>
+    <add-dialog ref="addDialog"
+      @success="searchTableData"></add-dialog>
     <print-preview ref="printPreview"></print-preview>
   </div>
 
@@ -298,7 +299,7 @@ export default {
 /deep/ .el-table__expanded-cell {
   // padding: 20px 170px 20px 50px;
   .el-table {
-    width: calc(100vw - 420px);
+    width: calc(100vw - 550px);
   }
 }
 .page {
