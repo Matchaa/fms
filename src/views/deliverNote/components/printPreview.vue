@@ -6,18 +6,18 @@
     @opened="dialogOpen"> -->
   <div id="print">
     <h2>{{companyInfo.name}}</h2>
-    <div>地址:{{companyInfo.address}}</div>
-    <span class="tel">电话:{{companyInfo.tel}}</span><span>传真:{{companyInfo.fax}}</span>
+    <div>地址：{{companyInfo.address}}</div>
+    <span class="tel">电话：{{companyInfo.tel}}</span><span>传真：{{companyInfo.fax}}</span>
     <div class="title">
-      <h2>1 2 3</h2>
+      <h2>送 货 单</h2>
       <span class="title__odd-numbers">No.{{detail.num}}</span>
     </div>
     <div class="customer">
-      <span>客户姓名:{{detail.customerName}}</span>
-      <span class="customer__address">客户地址:{{detail.address}}</span>
-      <span>客户电话:{{detail.phone}}</span>
-      <span>送货时间:{{detail.date}}</span>
-      <span>制单人:{{$store.state.userInfo.name}}</span>
+      <span>客户姓名：{{detail.customerName}}</span>
+      <span class="customer__address">客户地址：{{detail.address}}</span>
+      <span>客户电话：{{detail.phone}}</span>
+      <span>送货时间：{{detail.date}}</span>
+      <span>制单人：{{$store.state.userInfo.name}}</span>
     </div>
     <el-table class="table"
       :data="tableData"
