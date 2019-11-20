@@ -145,9 +145,7 @@ export default {
         sort: `合计金额(大写)：${this.digitUppercase(price)}`,
         totalPrice: `(小写)：¥${price}`
       })
-      setTimeout(() => {
-        this.printPartial(document.querySelector('#print'))
-      }, 1000)
+      this.printPartial(document.querySelector('#print'))
     },
     // onPrintClick() {
     //   this.printPartial(document.querySelector('#print'))
@@ -188,9 +186,11 @@ export default {
       const iframeDocs = iframeWin.document
       iframeDocs.write(`<!doctype html>`)
       iframeDocs.write(htmlTemp)
-      iframeWin.focus()
-      iframeWin.print()
-      document.body.removeChild(iframeDom)
+      setTimeout(() => {
+        iframeWin.focus()
+        iframeWin.print()
+        document.body.removeChild(iframeDom)
+      }, 1000)
     },
     digitUppercase(price) {
       const fraction = ['角', '分']
