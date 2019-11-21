@@ -60,7 +60,7 @@
           <span>{{scope.row[header.name]||'--'}}</span>
         </template>
       </el-table-column>
-      <el-table-column width="220px"
+      <el-table-column width="230px"
         label="操作"
         fixed="right">
         <template slot-scope="scope">
@@ -71,7 +71,8 @@
             @click="onDeleteClick(scope.$index)">删除</el-button>
           <el-button size="mini"
             type="primary"
-            @click="onPrintClick(scope.row)">打印</el-button>
+            :loading="scope.row.isPrint"
+            @click="onPrintClick(scope.row,scope.$index)">打印</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -234,6 +235,7 @@ export default {
         .then(res => {
           this.tableData = res.data.map((item, index) => {
             item.sort = pageSize * (currentPage - 1) + index + 1
+            item.isPrint = false
             return item
           })
           this.total = res.total
@@ -248,7 +250,9 @@ export default {
       this.$refs.addDialog.show = true
     },
     // 打印
-    onPrintClick(row) {
+    onPrintClick(row, index) {
+      row.isPrint = true
+      this.$refs.printPreview.index = index
       this.$refs.printPreview.detail = row
       this.$refs.printPreview.printPreview()
       // this.$refs.printPreview.show = true

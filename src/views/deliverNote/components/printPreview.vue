@@ -54,6 +54,7 @@ export default {
     return {
       show: false,
       detail: {},
+      index: '',
       companyInfo: {},
       tableData: [],
       tableHeader: [
@@ -189,10 +190,13 @@ export default {
       iframeDocs.write(`<!doctype html>`)
       iframeDocs.write(htmlTemp)
       iframeWin.focus()
+
       setTimeout(() => {
+        this.detail.isPrint = false
+        this.$set(this.$parent.tableData, this.index, this.detail)
         iframeWin.print()
         document.body.removeChild(iframeDom)
-      }, 1000)
+      }, 3000)
     },
     digitUppercase(price) {
       const fraction = ['角', '分']
