@@ -252,9 +252,12 @@ export default {
     // 打印
     onPrintClick(row, index) {
       row.isPrint = true
-      this.$refs.printPreview.index = index
-      this.$refs.printPreview.detail = row
-      this.$refs.printPreview.printPreview()
+      setTimeout(() => {
+        this.$refs.printPreview.index = index
+        this.$refs.printPreview.detail = row
+        this.$refs.printPreview.printPreview()
+      }, 1000)
+
       // this.$refs.printPreview.show = true
     },
     // 打印预览

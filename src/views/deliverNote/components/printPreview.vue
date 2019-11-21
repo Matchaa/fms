@@ -22,8 +22,7 @@
     <el-table class="table"
       :data="tableData"
       border
-      :span-method="arraySpanMethod"
-      style="width: 100%">
+      :span-method="arraySpanMethod">
       <el-table-column v-for="header in tableHeader"
         :key="header.name"
         :prop="header.name"
@@ -65,31 +64,35 @@ export default {
         },
         {
           title: '产品名称',
-          name: 'name'
+          name: 'name',
+          width: 120
         },
         {
           title: '规格',
-          name: 'standards'
+          name: 'standards',
+          width: 120
         },
         {
           title: '重量',
-          name: 'weight'
+          name: 'weight',
+          width: 100
         },
         {
           title: '单价',
           name: 'unitPrice'
         },
-        {
-          title: '材料费',
-          name: 'material'
-        },
-        {
-          title: '加工费',
-          name: 'machinPrice'
-        },
+        // {
+        //   title: '材料费',
+        //   name: 'material'
+        // },
+        // {
+        //   title: '加工费',
+        //   name: 'machinPrice'
+        // },
         {
           title: '金额',
-          name: 'totalPrice'
+          name: 'totalPrice',
+          width: 100
         },
         {
           title: '备注',
@@ -108,8 +111,8 @@ export default {
     arraySpanMethod({ rowIndex, columnIndex }) {
       if (rowIndex === this.tableData.length - 1) {
         if (columnIndex === 0) {
-          return [1, 7]
-        } else if (columnIndex === 7) {
+          return [1, 5]
+        } else if (columnIndex === 5) {
           return [1, 2]
         } else {
           return [0, 0]
@@ -184,16 +187,16 @@ export default {
       Object.entries(styleObj).forEach(
         ([key, value]) => (iframeDom.style[key] = value)
       )
-      document.body.insertBefore(iframeDom, document.body.children[0])
-      const iframeWin = iframeDom.contentWindow
-      const iframeDocs = iframeWin.document
-      iframeDocs.write(`<!doctype html>`)
-      iframeDocs.write(htmlTemp)
-      iframeWin.focus()
 
       setTimeout(() => {
         this.detail.isPrint = false
         this.$set(this.$parent.tableData, this.index, this.detail)
+        document.body.insertBefore(iframeDom, document.body.children[0])
+        const iframeWin = iframeDom.contentWindow
+        const iframeDocs = iframeWin.document
+        iframeDocs.write(`<!doctype html>`)
+        iframeDocs.write(htmlTemp)
+        iframeWin.focus()
         iframeWin.print()
         document.body.removeChild(iframeDom)
       }, 3000)
@@ -241,6 +244,9 @@ export default {
 </script>
 <style lang='scss' scoped>
 #print {
+  position: absolute;
+  top: 0;
+  left: 0;
   text-align: center;
   font-size: 12px;
   visibility: hidden;
@@ -277,6 +283,9 @@ h2 {
     grid-column-start: 2;
     grid-column-end: 4;
   }
+}
+.table {
+  width: 100%;
 }
 /deep/ .el-table td,
 /deep/ .el-table th {
