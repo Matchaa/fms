@@ -2,7 +2,7 @@
 <template>
   <el-dialog title="新增送货单"
     :visible.sync="show"
-    width="1000px"
+    width="1200px"
     @open="dialogOpen">
     <el-form class="form"
       :model="form"
@@ -156,7 +156,7 @@
         </template>
       </el-table-column>
     </el-table>
-    <div class="meta">备注：净尺寸和毛尺寸规格参考格式：100*100*100(方板长*宽*高)，100*100(圆板直径*长度)。</div>
+    <div class="meta">备注：净尺寸和毛尺寸规格参考格式：100*100*100（方板长*宽*高），100*100（圆板直径*长度）。</div>
     <span slot="footer"
       class="dialog-footer">
       <el-button @click="onCancel">重 置</el-button>

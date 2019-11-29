@@ -33,9 +33,8 @@ const setTotalPrice = (self, scope) => {
   const totalprice =
     row.price +
     row.material +
-    (row.productType === 'rect'
-      ? row.machining + row.flashSide + row.gasCut
-      : row.saw)
+    (row.productType === 'rect' ? row.roughMachin + row.fineMachin : 0) +
+    row.unloadingMachin
   setValue(self, scope, 'totalPrice', totalprice)
 }
 const tableHeader = {
@@ -62,10 +61,10 @@ const tableHeader = {
           unitPrice: 1,
           price: '',
           material: 0,
-          machining: 0,
-          flashSide: 0,
-          gasCut: 0,
-          saw: 0,
+          roughMachin: 0,
+          fineMachin: 0,
+          unloadingMachin: 0,
+          // saw: 0,
           totalPrice: '',
           remarks: ''
         }
@@ -192,9 +191,9 @@ const tableHeader = {
       setTotalPrice(self, scope)
     }
   },
-  machining: {
-    title: '精加工',
-    name: 'machining',
+  roughMachin: {
+    title: '粗加工',
+    name: 'roughMachin',
     precision: 2,
     type: 'inputNumber',
     disabled: row => {
@@ -205,8 +204,8 @@ const tableHeader = {
       setTotalPrice(self, scope)
     }
   },
-  flashSide: {
-    title: '飞边',
+  fineMachin: {
+    title: '精加工',
     name: 'flashSide',
     precision: 2,
     type: 'inputNumber',
@@ -218,32 +217,32 @@ const tableHeader = {
       setTotalPrice(self, scope)
     }
   },
-  gasCut: {
-    title: '气割费',
+  unloadingMachin: {
+    title: '下料加工费',
     name: 'gasCut',
     precision: 2,
     type: 'inputNumber',
-    disabled: row => {
-      const { productType } = row
-      return productType !== 'rect'
-    },
+    // disabled: row => {
+    //   const { productType } = row
+    //   return productType !== 'rect'
+    // },
     change: (self, scope) => {
       setTotalPrice(self, scope)
     }
   },
-  saw: {
-    title: '锯费',
-    name: 'saw',
-    precision: 2,
-    type: 'inputNumber',
-    disabled: row => {
-      const { productType } = row
-      return productType !== 'round'
-    },
-    change: (self, scope) => {
-      setTotalPrice(self, scope)
-    }
-  },
+  // saw: {
+  //   title: '锯费',
+  //   name: 'saw',
+  //   precision: 2,
+  //   type: 'inputNumber',
+  //   disabled: row => {
+  //     const { productType } = row
+  //     return productType !== 'round'
+  //   },
+  //   change: (self, scope) => {
+  //     setTotalPrice(self, scope)
+  //   }
+  // },
   totalPrice: {
     title: '总金额',
     name: 'totalPrice',

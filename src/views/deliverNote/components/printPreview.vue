@@ -17,7 +17,8 @@
       <span class="customer__address">客户地址：{{detail.address}}</span>
       <span>客户电话：{{detail.phone}}</span>
       <span>送货时间：{{detail.date}}</span>
-      <span>制单人：{{$store.state.userInfo.name}}</span>
+      <!-- <span>制单人：{{$store.state.userInfo.name}}</span> -->
+      <span>制单人：{{userName}}</span>
     </div>
     <el-table class="table"
       :data="tableData"
@@ -64,46 +65,68 @@ export default {
         },
         {
           title: '产品名称',
-          name: 'name',
-          width: 120
+          name: 'productName',
+          width: 70
         },
         {
           title: '规格',
-          name: 'standards',
-          width: 120
+          name: 'generalStandards',
+          width: 95
+        },
+        {
+          title: '件数',
+          name: 'amount',
+          width: 50
         },
         {
           title: '重量',
           name: 'weight',
-          width: 100
+          width: 70
         },
         {
           title: '单价',
-          name: 'unitPrice'
+          name: 'unitPrice',
+          width: 50
         },
-        // {
-        //   title: '材料费',
-        //   name: 'material'
-        // },
-        // {
-        //   title: '加工费',
-        //   name: 'machinPrice'
-        // },
+        {
+          title: '材料费',
+          name: 'material',
+          width: 60
+        },
+        {
+          title: '粗加工',
+          name: 'roughMachin',
+          width: 60
+        },
+        {
+          title: '精加工',
+          name: 'fineMachin',
+          width: 60
+        },
+        {
+          title: '加工费',
+          name: 'unloadingMachin',
+          width: 60
+        },
         {
           title: '金额',
           name: 'totalPrice',
-          width: 100
+          width: 60
         },
         {
           title: '备注',
           name: 'remarks',
-          width: 150
+          width: 60
         }
       ]
     }
   },
 
-  computed: {},
+  computed: {
+    userName() {
+      return JSON.parse(sessionStorage.getItem('userInfo')).name
+    }
+  },
 
   mounted() {},
 
@@ -111,8 +134,8 @@ export default {
     arraySpanMethod({ rowIndex, columnIndex }) {
       if (rowIndex === this.tableData.length - 1) {
         if (columnIndex === 0) {
-          return [1, 5]
-        } else if (columnIndex === 5) {
+          return [1, 9]
+        } else if (columnIndex === 9) {
           return [1, 2]
         } else {
           return [0, 0]
@@ -129,15 +152,17 @@ export default {
     async printPreview() {
       await this.reFindCompanyInfo()
       this.tableData = this.detail.productData.map((item, index) => {
-        return {
-          sort: index + 1,
-          name: item.productName,
-          standards: item.generalStandards,
-          weight: item.weight,
-          unitPrice: item.unitPrice,
-          totalPrice: item.totalPrice,
-          remarks: item.remarks
-        }
+        item.sort = index + 1
+        return item
+        // return {
+        //   sort: index + 1,
+        //   name: item.productName,
+        //   standards: item.generalStandards,
+        //   weight: item.weight,
+        //   unitPrice: item.unitPrice,
+        //   totalPrice: item.totalPrice,
+        //   remarks: item.remarks
+        // }
       })
       for (let i = this.tableData.length; i < 9; i++) {
         this.tableData.push({})
@@ -187,19 +212,18 @@ export default {
       Object.entries(styleObj).forEach(
         ([key, value]) => (iframeDom.style[key] = value)
       )
-
+      document.body.insertBefore(iframeDom, document.body.children[0])
+      const iframeWin = iframeDom.contentWindow
+      const iframeDocs = iframeWin.document
+      iframeDocs.write(`<!doctype html>`)
+      iframeDocs.write(htmlTemp)
       setTimeout(() => {
         this.detail.isPrint = false
         this.$set(this.$parent.tableData, this.index, this.detail)
-        document.body.insertBefore(iframeDom, document.body.children[0])
-        const iframeWin = iframeDom.contentWindow
-        const iframeDocs = iframeWin.document
-        iframeDocs.write(`<!doctype html>`)
-        iframeDocs.write(htmlTemp)
         iframeWin.focus()
         iframeWin.print()
         document.body.removeChild(iframeDom)
-      }, 3000)
+      }, 2000)
     },
     digitUppercase(price) {
       const fraction = ['角', '分']
@@ -286,11 +310,13 @@ h2 {
 }
 .table {
   width: 100%;
+  font-size: 12px;
 }
 /deep/ .el-table td,
 /deep/ .el-table th {
   padding: 0 !important;
   height: 23px;
+  font-size: 12px;
 }
 /deep/.el-table--scrollable-x .el-table__body-wrapper {
   overflow: hidden;
@@ -298,6 +324,7 @@ h2 {
 
 /deep/ .el-table--border th {
   border-right: 2px solid #ebeef5;
+  border-bottom: 2px solid #ebeef5;
 }
 
 /deep/ .el-table--border {
@@ -321,7 +348,7 @@ h5 {
     margin: 0;
   }
   #print {
-    margin: 1cm;
+    margin: 0.6cm;
     visibility: visible;
   }
 }

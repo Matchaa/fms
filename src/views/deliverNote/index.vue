@@ -65,10 +65,10 @@
         fixed="right">
         <template slot-scope="scope">
           <el-button size="mini"
-            @click="onEditClick(scope.$index, scope.row)">编辑</el-button>
+            @click="onEditClick(scope.row,scope.$index)">编辑</el-button>
           <el-button size="mini"
             type="danger"
-            @click="onDeleteClick(scope.$index)">删除</el-button>
+            @click="onDeleteClick(scope.row,scope.$index)">删除</el-button>
           <el-button size="mini"
             type="primary"
             :loading="scope.row.isPrint"
@@ -105,7 +105,8 @@ export default {
       tableHeader: [
         {
           title: '序号',
-          name: 'sort'
+          name: 'sort',
+          width: 50
         },
         {
           title: '状态',
@@ -127,7 +128,7 @@ export default {
         {
           title: '联系电话',
           name: 'phone',
-          width: 100
+          width: 110
         },
         {
           title: '送货时间',
@@ -173,21 +174,21 @@ export default {
           name: 'material'
         },
         {
+          title: '粗加工',
+          name: 'roughMachin'
+        },
+        {
           title: '精加工',
-          name: 'machining'
+          name: 'fineMachin'
         },
         {
-          title: '飞边',
-          name: 'flashSide'
+          title: '下料加工费',
+          name: 'unloadingMachin'
         },
-        {
-          title: '气割费',
-          name: 'gasCut'
-        },
-        {
-          title: '锯费',
-          name: 'saw'
-        },
+        // {
+        //   title: '锯费',
+        //   name: 'saw'
+        // },
         {
           title: '总金额',
           name: 'totalPrice'
@@ -264,20 +265,22 @@ export default {
     // onPrintPreviewClick() {
     //   this.$refs.printPreview.show = true
     // },
-    onEditClick(index, row) {
+    onEditClick(row) {
       this.$refs.addDialog.detail = row
       this.$refs.addDialog.show = true
     },
-    onDeleteClick(index) {
+    onDeleteClick(row) {
       this.$confirm('此操作将永久删除该数据, 是否继续?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        this.tableData.splice(index, 1)
-        this.$message({
-          type: 'success',
-          message: '删除成功!'
+        this.$db.deleteData('DELIVERYNOTE_DATA', row.id).then(() => {
+          this.reFindTableData()
+          this.$message({
+            type: 'success',
+            message: '删除成功!'
+          })
         })
       })
     },

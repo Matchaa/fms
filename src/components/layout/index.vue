@@ -64,7 +64,9 @@ export default {
 
   computed: {
     username() {
-      return this.$store.state.userInfo.name
+      // return this.$store.state.userInfo.name
+      const userinfo= JSON.parse(sessionStorage.getItem('userInfo'))
+      return userinfo?userinfo.name:''
     },
     tabListMap: {
       get() {

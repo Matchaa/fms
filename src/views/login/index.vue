@@ -40,7 +40,7 @@
 </template>
 
 <script>
-import Cookies from 'js-cookie'
+// import Cookies from 'js-cookie'
 export default {
   data() {
     return {
@@ -97,7 +97,7 @@ export default {
             })
           }
           request.onsuccess = () => {
-            Cookies.set('token', 123456)
+            // Cookies.set('token', 123456)
             this.$db.getData('COMPANY_INFO').then(res => {
               if (!res.total) {
                 this.$db.putData('COMPANY_INFO', {
@@ -110,15 +110,15 @@ export default {
               }
             })
 
-            this.$store.commit('changeUserInfo', {
-              name: '管理员'
-            })
-            // sessionStorage.setItem(
-            //   'userInfo',
-            //   JSON.stringify({
-            //     name: 'admin'
-            //   })
-            // )
+            // this.$store.commit('changeUserInfo', {
+            //   name: '管理员'
+            // })
+            sessionStorage.setItem(
+              'userInfo',
+              JSON.stringify({
+                name: '管理员'
+              })
+            )
             this.$router.push({ name: 'layout' })
           }
         } else {
