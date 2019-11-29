@@ -6,7 +6,10 @@ export function isPhone(str) {
   const reg = /^1[3456789]\d{9}$/
   return reg.test(str)
 }
-
+export function isTel(str) {
+  const reg = /^0\d{2,3}-?\d{7,8}$/
+  return reg.test(str)
+}
 /**
  * @param {string} str
  * @returns {Boolean}

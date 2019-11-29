@@ -22,7 +22,7 @@
         prop="phone">
         <el-input v-model="form.phone"
           placeholder="请输入联系电话"
-          :maxlength="11"></el-input>
+          :maxlength="13"></el-input>
       </el-form-item>
       <el-form-item label="传真"
         prop="fax">
@@ -40,11 +40,11 @@
 </template>
 
 <script>
-import { isPhone } from '@/utils/validate.js'
+import { isPhone, isTel } from '@/utils/validate.js'
 export default {
   data() {
     var validatePhone = (rule, value, callback) => {
-      if (!isPhone(value)) {
+      if (!isPhone(value) && !isTel(value)) {
         callback(new Error('请输入正确格式的电话号码'))
       } else {
         callback()
@@ -64,10 +64,7 @@ export default {
         address: [
           { required: true, message: '请输入客户地址', trigger: 'blur' }
         ],
-        phone: [
-          { required: true, message: '请输入电话号码', trigger: 'blur' },
-          { validator: validatePhone, trigger: 'blur' }
-        ]
+        phone: [{ validator: validatePhone, trigger: 'blur' }]
       }
     }
   },
